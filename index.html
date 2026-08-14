@@ -260,9 +260,10 @@ powerPreference:'high-performance',
 logarithmicDepthBuffer:true
 });
 }catch(e){$('err').classList.remove('hide');return;}
-renderer.setPixelRatio(Math.min(devicePixelRatio||1,/Mobi|Android/i.test(navigator.userAgent)?1.75:2.5));
+renderer.setPixelRatio(Math.min(devicePixelRatio||1,/Mobi|Android/i.test(navigator.userAgent)?2:2.75));
 renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
+renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.2;
+renderer.shadowMap.autoUpdate=true;
 renderer.setClearColor(0x05070f,1);
 $('stage').appendChild(renderer.domElement);
 const scene=new THREE.Scene();scene.background=new COL(0x05070f);scene.fog=new THREE.Fog(0xdd9067,30,185);
@@ -363,10 +364,11 @@ const groundMesh=plane(scene,groundMat,460,900,-220,-0.05,0);
 groundMesh.receiveShadow=true;groundMesh.renderOrder=0;
 const seaGeo=new THREE.PlaneGeometry(460,900,20,20);
 const sea=new THREE.Mesh(seaGeo,seaMat);sea.rotation.x=-Math.PI/2;sea.position.set(240,-1.05,-150);sea.renderOrder=1;scene.add(sea);
-plane(scene,new THREE.MeshBasicMaterial({map:shimmerTex,transparent:true,opacity:.1,blending:THREE.AdditiveBlending,depthWrite:false}),440,700,240,-1.03,-140).renderOrder=2;
+const seaShimmer=new THREE.Mesh(new THREE.PlaneGeometry(440,700),new THREE.MeshBasicMaterial({map:shimmerTex,transparent:true,opacity:.1,blending:THREE.AdditiveBlending,depthWrite:false}));seaShimmer.rotation.x=-Math.PI/2;seaShimmer.position.set(240,-1.03,-140);seaShimmer.renderOrder=2;scene.add(seaShimmer);
 const foamMat=new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.25,depthWrite:false});
-plane(scene,foamMat,2.5,900,10.5,-0.01,-150).renderOrder=3;
-const seaReflect=glow(0xffdf9e,30,0);seaReflect.position.set(100,0.1,-200);seaReflect.scale.set(15,80,1);seaReflect.renderOrder=4;scene.add(seaReflect);
+const foam=plane(scene,foamMat,2.5,900,10.5,-0.01,-150);foam.renderOrder=3;
+const sideGround=plane(scene,groundMat,460,900,240,-0.045,0);sideGround.receiveShadow=true;sideGround.renderOrder=0;sideGround.visible=false;
+const seaReflect=glow(0xffdf9e,30,0);seaReflect.position.set(100,0.1,-200);seaReflect.scale.set(15,80,1);seaReflect.renderOrder=4;seaReflect.visible=false;scene.add(seaReflect);
 const roadMesh=plane(scene,roadMat,13.6,300,0,0.00,-110);roadMesh.receiveShadow=true;roadMesh.renderOrder=10;
 plane(scene,M.gravel,2.6,300,-8.1,0.01,-110).renderOrder=11;
 plane(scene,M.gravel,2.6,300,8.1,0.01,-110).renderOrder=11;
@@ -762,7 +764,7 @@ if(sunDisc.visible){sunDisc.position.copy(sunV).multiplyScalar(560);sunDisc.look
 sunDisc.material.color.copy(skyUni.uSunCol.value);sunDisc.material.opacity=clamp((sunY+.05)/.15,0,1)*(1-rainF);
 sunGlow.position.copy(sunDisc.position);sunGlow.material.color.copy(skyUni.uSunCol.value);
 sunGlow.material.opacity=.9*sunDisc.material.opacity*(1-rainF);sunGlow.scale.setScalar(200+Math.sin(S.t*1.2)*14);
-seaReflect.material.color.copy(skyUni.uSunCol.value);seaReflect.material.opacity=.15*sunDisc.material.opacity;
+seaReflect.material.color.copy(skyUni.uSunCol.value);seaReflect.material.opacity=0;
 seaReflect.position.x=100+sunV.x*80;}
 else{sunGlow.material.opacity=0;seaReflect.material.opacity=0;}
 moonDisc.visible=nightF>.25&&rainF<.5;
@@ -1024,7 +1026,8 @@ const ph=((S.dist/4200)+.015)%1;applyPhase(ph);
 if(playing||demo){const nb=Math.floor(S.dist/1300)%5;
 if(nb!==S.biome){S.biome=nb;groundTarget.setHex(BIOMES[nb].ground);groundMat.map=groundTexs[nb];groundMat.needsUpdate=true;
 if(playing){banner(BIOMES[nb]);if(nb===3)SAVE.st.city=1;if(nb===4)SAVE.st.snow=1;}}
-groundMat.color.lerp(groundTarget,1-Math.exp(-dt*.5));}
+groundMat.color.lerp(groundTarget,1-Math.exp(-dt*.5));
+const coast=false;sea.visible=false;seaShimmer.visible=false;foam.visible=false;sideGround.visible=true;}
 const dz=S.speed*dt;asphaltTex.offset.y+=dz/7.14;wetAsphaltTex.offset.y+=dz/7.14;dashTex.offset.y+=dz/12;shimmerTex.offset.y-=dt*.05;chevTex.offset.y-=dt*1.5;
 if(rain.visible){const rp=rain.geometry.attributes.position.array;
 for(let i=0;i<RAIN_COUNT;i++){rp[i*3+1]-=rainVelocities[i]*dt;rp[i*3+2]+=S.speed*dt*.5;
@@ -1205,7 +1208,7 @@ buildPlayerCar(CARS[SAVE.carSel]);
 for(let i=0;i<70;i++){spawnDecor();for(const t in decor)for(const it of decor[t])if(it.active)it.g.position.z=rnd(-150,40);}
 for(let i=0;i<6;i++)spawnPost();posts.forEach(p=>{if(p.active)p.g.position.z=rnd(-140,30);});
 for(let i=0;i<6;i++)spawnLamp();decor.lamp.forEach(l=>{if(l.active)l.g.position.z=rnd(-150,30);});
-applyPhase(.015);refreshGold();window.__srBoot=true;loop();
+applyPhase(.015);sea.visible=true;seaShimmer.visible=true;foam.visible=true;sideGround.visible=false;refreshGold();window.__srBoot=true;loop();
 })();
 </script>
 </body>
