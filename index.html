@@ -5,6 +5,24 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#05070f">
 <title>Sunset Rush · Fúria do Pôr do Sol</title>
+<meta name="description" content="Sunset Rush: corrida arcade em paisagem pela Rota 66.">
+<meta name="application-name" content="Sunset Rush">
+<meta name="apple-mobile-web-app-title" content="Sunset Rush">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sunset Rush · Fúria do Pôr do Sol">
+<meta property="og:description" content="Corrida arcade em paisagem pela Rota 66.">
+<meta property="og:image" content="./icons/icon-512.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sunset Rush · Fúria do Pôr do Sol">
+<meta name="twitter:description" content="Corrida arcade em paisagem pela Rota 66.">
+<meta name="twitter:image" content="./icons/icon-512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
@@ -183,10 +201,10 @@ hr.sep{border:none;border-top:1px dashed var(--line);margin:16px 0}
 <div id="stage"></div><div id="vig"></div><div id="nitrofx"></div><div id="rainfx"></div><div id="flash"></div>
 <div id="hud">
 <div id="hudTL"><div class="plate" id="scoreBox"><i>SCORE</i><b id="score">0</b></div><div class="plate" id="comboBox"><b id="comboV">Combo ×1.0</b></div><div class="plate" id="shieldBox"><b id="shieldV">🛡 Escudo ×1</b></div></div>
-<div id="hudTR"><div class="plate"><i>Dist.</i><b id="dist">0,00 km</b></div><div class="plate"><i>Recorde</i><b id="best">0</b></div><button class="ibtn" id="btnPause">⏸</button><button class="ibtn" id="btnMute">🔊</button></div>
+<div id="hudTR"><div class="plate"><i>Dist.</i><b id="dist">0,00 km</b></div><div class="plate"><i>Recorde</i><b id="best">0</b></div><button class="ibtn" id="btnPause" aria-label="Pausar ou continuar">⏸</button><button class="ibtn" id="btnMute" aria-label="Ativar ou desativar o som">🔊</button></div>
 <div id="cluster"><svg id="gauge" width="132" height="76" viewBox="0 0 132 76"><path d="M12 66 A54 54 0 0 1 120 66" stroke="#232b47" stroke-width="10" fill="none" stroke-linecap="round"/><path id="gArc" d="M12 66 A54 54 0 0 1 120 66" stroke="#ffb03a" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="169.6" stroke-dashoffset="169.6"/><g id="gNeedle" transform="rotate(-90 66 66)"><line x1="66" y1="66" x2="66" y2="24" stroke="#ff5040" stroke-width="4" stroke-linecap="round"/></g><circle cx="66" cy="66" r="6" fill="#ff5040"/></svg><div id="spdRow"><span id="spd">0</span><small>KM/H</small></div></div>
 <div id="nitroWrap"><label>N₂O</label><div id="nitroBar"><div id="nitroFill"></div></div></div>
-<div id="t-left" class="tbtn">◀</div><div id="t-right" class="tbtn">▶</div><div id="t-brake" class="tbtn">▼</div><div id="t-nitro" class="tbtn">N₂O</div>
+<div id="t-left" class="tbtn" role="button" aria-label="Virar para a esquerda">◀</div><div id="t-right" class="tbtn" role="button" aria-label="Virar para a direita">▶</div><div id="t-brake" class="tbtn" role="button" aria-label="Frear">▼</div><div id="t-nitro" class="tbtn" role="button" aria-label="Usar nitro">N₂O</div>
 </div>
 <div id="floaters"></div><div class="plate" id="toast"><b id="toastV"></b></div>
 <div id="banner"><div class="plate"><b id="bannerV">Litoral</b><i id="bannerE">COAST HIGHWAY</i></div></div>
@@ -216,14 +234,15 @@ hr.sep{border:none;border-top:1px dashed var(--line);margin:16px 0}
 <div class="row"><button class="abtn ghost small" id="btnCopyPause">📋 Copiar código</button></div></div></div>
 <div class="ov hide" id="err"><div>⚠ Falha ao iniciar o motor 3D<br>Precisa de internet para carregar o Three.js, ou o navegador não suporta WebGL</div></div>
 <div id="dbg"></div></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="./vendor/three.min.js"></script>
+<script>window.THREE||document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>')</script>
 <script>window.THREE||document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"><\/script>')</script>
 <script>window.THREE||document.write('<script src="https://unpkg.com/three@0.128.0/build/three.min.js"><\/script>')</script>
 <script>
 (function(){'use strict';
 const $=id=>document.getElementById(id);
 addEventListener('error',e=>{try{const d=$('dbg');if(d){d.textContent='⚠ Erro: '+(e.message||e.type);d.classList.add('show');}}catch(_){}});
-setTimeout(()=>{if(!window.__srBoot){const d=$('dbg');if(d){d.textContent='⚠ Jogo não iniciou: Three.js não carregou. Abra o arquivo direto no navegador';d.classList.add('show');}}},3500);
+setTimeout(()=>{if(!window.__srBoot){const d=$('dbg');if(d){d.textContent='⚠ Jogo não iniciou: não foi possível carregar o motor 3D. Verifique a conexão e tente novamente.';d.classList.add('show');}}},3500);
 if(!window.THREE){$('err').classList.remove('hide');return;}
 const clamp=(v,a,b)=>v<a?a:v>b?b:v,lerp=(a,b,t)=>a+(b-a)*t,rnd=(a,b)=>a+Math.random()*(b-a),pick=a=>a[Math.random()*a.length|0];
 const TAU=Math.PI*2,V3=THREE.Vector3,COL=THREE.Color;
@@ -1263,6 +1282,11 @@ for(let i=0;i<6;i++)spawnPost();posts.forEach(p=>{if(p.active)p.g.position.z=rnd
 for(let i=0;i<6;i++)spawnLamp();decor.lamp.forEach(l=>{if(l.active)l.g.position.z=rnd(-150,30);});
 applyPhase(.015);sea.visible=true;seaShimmer.visible=true;foam.visible=true;sideGround.visible=false;refreshGold();window.__srBoot=true;loop();
 })();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+}
 </script>
 </body>
 </html>
