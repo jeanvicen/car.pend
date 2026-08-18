@@ -120,6 +120,15 @@ html,body{position:fixed;inset:0;overflow:hidden;background:#05070f;user-select:
 .chip{background:#151b30;border:1px solid var(--line);padding:6px 11px;font-size:12px;color:var(--dim);border-radius:4px}
 .chip b{color:var(--text);font-family:var(--fd);font-weight:normal;margin-right:4px}
 .hint{font-size:11px;color:var(--dim);line-height:1.7}
+#installPrompt{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:28;display:none;align-items:center;gap:12px;width:min(460px,calc(100% - 28px));max-width:calc(100% - 28px);background:rgba(10,15,30,.96);border:1px solid var(--cyan);box-shadow:0 0 0 1px rgba(65,224,255,.16),0 10px 30px rgba(0,0,0,.55);padding:10px 12px;pointer-events:auto}
+#installPrompt.show{display:flex}
+#installPrompt .installIcon{width:42px;height:42px;object-fit:cover;border:1px solid var(--line);flex:0 0 auto}
+#installPrompt .installCopy{flex:1;min-width:0}
+#installPrompt .installCopy b{display:block;font-family:var(--fd);font-size:14px;color:var(--cyan);letter-spacing:1px}
+#installPrompt .installCopy span{display:block;font-size:11px;color:var(--dim);line-height:1.4;margin-top:2px}
+#btnInstall{font-size:13px;padding:9px 12px;white-space:nowrap}
+#btnInstallClose{width:30px;height:30px;padding:0;font-size:16px;flex:0 0 auto}
+@media(max-width:620px){#installPrompt{bottom:12px;gap:8px;padding:8px}.installIcon{width:36px!important;height:36px!important}.installCopy b{font-size:12px!important}.installCopy span{font-size:10px!important}#btnInstall{font-size:11px;padding:8px 9px}}
 .panel{background:#101528f2;border:1px solid var(--line);box-shadow:0 24px 60px rgba(0,0,0,.6);padding:26px 38px;min-width:340px;max-width:94%;text-align:center}
 .panel h2{font-family:var(--fd);font-size:34px;letter-spacing:3px;margin-bottom:4px}
 .panel h2.red{color:var(--red)}.panel h2.amber{color:var(--amber)}
@@ -214,6 +223,7 @@ hr.sep{border:none;border-top:1px dashed var(--line);margin:16px 0}
 <div class="chips"><div class="chip"><b>◀ ▶</b>Toque / Setas: virar</div><div class="chip"><b>N₂O</b>Espaço · Nitro</div><div class="chip"><b>▼</b>S · Freio</div></div>
 <div class="mrow2"><button class="abtn big" id="btnStart">🔑 Ligar o Motor</button><button class="abtn cyan" id="btnGarage">🔧 Garagem</button></div>
 <div class="hint">📱 A tela gira sozinha para paisagem · Passe raspando para acumular combos; a pista contrária vale mais pontos<br>💾 Antes de sair, copie o código em "Garagem → Save" e importe depois para recuperar o progresso</div></div></div></div>
+<div id="installPrompt" role="dialog" aria-live="polite" aria-label="Instalar Sunset Rush"><img class="installIcon" src="./icons/icon-192.png" alt=""><div class="installCopy"><b>Instalar Sunset Rush</b><span id="installPromptText">Baixe o jogo no celular e abra como aplicativo.</span></div><button class="abtn cyan small" id="btnInstall">Instalar</button><button class="ibtn" id="btnInstallClose" aria-label="Fechar aviso de instalação">×</button></div>
 <div class="ov hide" id="garage"><div class="gpanel"><div class="ghead"><div class="gtitle"><b>🔧 Garagem</b><i>GARAGEM · UPGRADES / CARROS / SAVE</i></div><div class="plate goldplate"><span>💰 <b id="garGold">0</b></span></div><button class="abtn ghost small" id="btnGarBack">← Voltar</button></div>
 <div class="gtabs"><button class="gtab on" data-tab="upg">Upgrades</button><button class="gtab" data-tab="cars">Carros</button><button class="gtab" data-tab="ach">Conquistas</button><button class="gtab" data-tab="stats">Estatísticas</button><button class="gtab" data-tab="save">Save</button></div>
 <div class="gbody scrollable"><div id="tab-upg" class="tabpane"></div><div id="tab-cars" class="tabpane hide"></div><div id="tab-ach" class="tabpane hide"></div><div id="tab-stats" class="tabpane hide"></div>
@@ -1287,6 +1297,54 @@ applyPhase(.015);sea.visible=true;seaShimmer.visible=true;foam.visible=true;side
 if ('serviceWorker' in navigator) {
   addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
 }
+</script>
+<script>
+(() => {
+  const promptBox = document.getElementById('installPrompt');
+  const installButton = document.getElementById('btnInstall');
+  const closeButton = document.getElementById('btnInstallClose');
+  const promptText = document.getElementById('installPromptText');
+  if (!promptBox || !installButton || !closeButton || !promptText) return;
+
+  let deferredPrompt = null;
+  const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  const hidePrompt = () => promptBox.classList.remove('show');
+  const showPrompt = message => {
+    if (standalone) return;
+    if (message) promptText.textContent = message;
+    promptBox.classList.add('show');
+  };
+
+  addEventListener('beforeinstallprompt', event => {
+    event.preventDefault();
+    deferredPrompt = event;
+    showPrompt('Instale no celular e abra como aplicativo.');
+  });
+
+  installButton.addEventListener('click', async () => {
+    if (!deferredPrompt) {
+      showPrompt(/iPhone|iPad|iPod/i.test(navigator.userAgent)
+        ? 'No Safari, toque em Compartilhar e “Adicionar à Tela de Início”.'
+        : 'No Chrome, abra o menu ⋮ e escolha “Instalar aplicativo”.');
+      return;
+    }
+    const event = deferredPrompt;
+    deferredPrompt = null;
+    hidePrompt();
+    await event.prompt();
+    await event.userChoice.catch(() => null);
+  });
+
+  closeButton.addEventListener('click', hidePrompt);
+  addEventListener('appinstalled', () => {
+    deferredPrompt = null;
+    hidePrompt();
+  });
+
+  if (!standalone && /iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+    setTimeout(() => showPrompt('No Safari, toque em Compartilhar e “Adicionar à Tela de Início”.'), 1400);
+  }
+})();
 </script>
 </body>
 </html>

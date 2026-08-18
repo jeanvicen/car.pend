@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sunset-rush-v1';
+const CACHE_NAME = 'sunset-rush-v2';
 const APP_SHELL = [
   './',
   './index.html',

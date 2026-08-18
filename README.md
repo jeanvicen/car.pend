@@ -46,6 +46,14 @@ git push origin main
 
 Se uma alteração for feita diretamente pelo editor do GitHub, use **Commit changes** na branch `main`; o resultado será o mesmo: o deploy será iniciado pelo vínculo GitHub–Vercel.
 
+## Aviso de instalação no Chrome
+
+Quando o Chrome Android liberar o modo instalável, o jogo exibirá o aviso **Instalar Sunset Rush** com o botão **Instalar**. Esse botão abre o prompt oficial do navegador e adiciona o jogo à tela inicial como aplicativo. Se o navegador não oferecer o prompt automático, o aviso orienta o usuário a abrir o menu do Chrome e escolher **Instalar aplicativo**. No iPhone e iPad, o aviso explica o caminho do Safari por **Compartilhar → Adicionar à Tela de Início**.
+
+## APK Android
+
+A pasta [`apk/`](./apk/) contém a preparação do pacote Android com Capacitor. Ela copia o mesmo jogo web para uma aplicação Android, fixa a orientação paisagem e usa a logo do carro no launcher. Para gerar um APK de teste, consulte [`apk/README.md`](./apk/README.md) e execute `npm install`, `npm run sync` e `npm run build-debug` em um computador com Android Studio e Android SDK configurados. A jogabilidade não é reescrita nem modificada nesse processo.
+
 ## Regra para futuras alterações
 
 Não remova `manifest.webmanifest`, `sw.js`, `vendor/three.min.js` ou a pasta `icons/`. Se o jogo for alterado, aumente a versão em `CACHE_NAME` dentro de `sw.js`, por exemplo de `sunset-rush-v1` para `sunset-rush-v2`, para garantir que todos os arquivos estáticos sejam renovados no próximo acesso.
