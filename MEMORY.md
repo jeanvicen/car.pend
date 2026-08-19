@@ -215,3 +215,15 @@ A aba `Save` local 4.1.0 permaneceu completa, com código de 46 caracteres, Copi
 Matriz visual local 4.1.0: em `640x360`, logo, recorde, instruções, cartão do Chama, botões Ligar o Motor/Garagem e aviso de instalação ficaram completos e legíveis. Em `375x812`, o jogo aplicou o fallback previsto de rotação CSS para paisagem; os elementos permaneceram presentes e o aviso de instalação ficou dentro da área rotacionada.
 
 A checagem no navegador confirmou `typeof DrifinVehicleEngine === "function"`, cinco perfis carregados e o menu sincronizado com `Chama`, `DRIFT BALANCEADO` e `EQUILIBRADO`. O console não apresentou exceções após corrida, pausa, garagem, save e matriz mobile.
+
+No deploy público pós-push, `version.json` retornou `4.1.0`/`drifin-slot-v6`, `vehicle-engine.js` respondeu `200` e os cabeçalhos permaneceram corretos. A sessão pública com save `sr_save` exibiu `Física modular e menus mobile renovados`, `Atualizar` e `Depois`; `Depois` fechou o aviso e o menu reapareceu com recorde `1428`, moedas `697`, Chama e `DRIFT BALANCEADO`.
+
+A corrida pública 4.1.0 iniciou pelo menu renovado com contagem `3` e avançou para `1`; o carro, pista, cenário, HUD, nitro e controles permaneceram renderizando no deploy Vercel.
+
+Na corrida pública 4.1.0, o jogo avançou de `0,04 km / 80 km/h` para `0,17 km / 84 km/h`, com score crescente. `ArrowRight` alterou a resposta do carro e `Space` acionou o nitro; pista, tráfego, HUD, câmera externa e renderer permaneceram estáveis.
+
+No deploy público, a câmera alternou para `◉ Visão interna` com a pista/horizonte livres e cockpit na parte inferior. A corrida chegou a score `501`, distância `0,30 km` e `88 km/h`; o botão de pausa abriu o overlay com Continuar, Reiniciar, Início e Copiar código.
+
+Após a corrida pública, o retorno pelo botão Início reapresentou o menu e a Garagem abriu com `697` moedas, upgrades, `1/16` conquistas e progresso acumulado. O painel mobile permaneceu rolável, sem corte visível, com tabs e ações preservadas.
+
+A aba `Carros` pública exibiu showroom 3D e os cinco rótulos de perfil da 4.1.0. O botão `Voltar` fechou a garagem mesmo partindo dessa aba e reapresentou o menu com `1428` de recorde, `697` moedas e o cartão do Chama.
