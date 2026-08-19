@@ -111,3 +111,7 @@ Após integrar os commits remotos de versão, a release foi publicada como `3.2.
 ## Validação do modo tela inteira
 
 Na prévia local, `requestFullscreen({ navigationUI: 'hide' })` ficou disponível. Após o clique real em `Ligar o Motor`, o navegador confirmou `fullscreenActive: true` e `displayModeFullscreen: true`; a viewport permaneceu `1280×1100`, o menu foi ocultado e a contagem regressiva continuou em `2`.
+
+## Deploy público da tela inteira 3.3.0
+
+A Vercel passou a servir `version.json` na versão `3.3.0` com `cacheName: drifin-slot-v4`. A página pública carregou o menu e o canvas normalmente e exibiu o aviso `Tela inteira e modo imersivo` com os botões `Atualizar` e `Depois`.
