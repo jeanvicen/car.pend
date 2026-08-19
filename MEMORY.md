@@ -107,3 +107,7 @@ Foi simulado um fim de corrida com score, ganhos, conquistas, distância, moedas
 ## Deploy público da correção 3.2.0
 
 Após integrar os commits remotos de versão, a release foi publicada como `3.2.0` com `cacheName: drifin-slot-v3`. O endpoint público confirmou a versão e as release notes. A página principal pública carregou como `Drifin Slot · Neon Drift`, com menu, canvas e aviso `Correção mobile e melhorias` exibindo os botões `Atualizar` e `Depois`.
+
+## Validação do modo tela inteira
+
+Na prévia local, `requestFullscreen({ navigationUI: 'hide' })` ficou disponível. Após o clique real em `Ligar o Motor`, o navegador confirmou `fullscreenActive: true` e `displayModeFullscreen: true`; a viewport permaneceu `1280×1100`, o menu foi ocultado e a contagem regressiva continuou em `2`.

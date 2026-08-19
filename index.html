@@ -346,7 +346,14 @@ const startShield=()=>Math.min(shieldMax(),SAVE.upg[3]+car().armor),magnetR=()=>
 function checkAch(){const got=[];for(const a of ACHS){if(SAVE.ach&(1<<a.id))continue;if(a.get(SAVE)>=a.goal){SAVE.ach|=1<<a.id;SAVE.gold+=a.rw;got.push(a);}}got.forEach(()=>sfx.shield());return got;}
 const app=$('app');let W=innerWidth,H=innerHeight;
 function fit(){const vv=window.visualViewport;const vw=Math.max(1,Math.round(vv?.width||innerWidth));const vh=Math.max(1,Math.round(vv?.height||innerHeight));const portrait=vh>vw;if(portrait){W=vh;H=vw;app.style.width=W+'px';app.style.height=H+'px';app.style.transformOrigin='0 0';app.style.transform=`translate3d(${vw}px,0,0) rotate(90deg)`;}else{W=vw;H=vh;app.style.width=W+'px';app.style.height=H+'px';app.style.transformOrigin='0 0';app.style.transform='none';}if(renderer){renderer.setSize(W,H,false);camera.aspect=W/H;camera.updateProjectionMatrix();}}
-addEventListener('resize',fit);addEventListener('orientationchange',()=>setTimeout(fit,120));if(window.visualViewport)visualViewport.addEventListener('resize',fit);
+addEventListener('resize',fit);addEventListener('orientationchange',()=>setTimeout(fit,120));if(window.visualViewport)visualViewport.addEventListener('resize',fit);document.addEventListener('fullscreenchange',()=>setTimeout(fit,60));
+let browserFullscreenTried=false;
+function requestBrowserFullscreen(){
+if(browserFullscreenTried||document.fullscreenElement||!document.documentElement.requestFullscreen)return;
+browserFullscreenTried=true;
+const result=document.documentElement.requestFullscreen({navigationUI:'hide'});
+if(result&&result.catch)result.catch(()=>{});
+}
 const DEVICE_PROFILE=(()=>{const coarse=matchMedia('(pointer:coarse)').matches||/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);const cores=navigator.hardwareConcurrency||4;const memory=navigator.deviceMemory||4;const mobile=coarse;const low=mobile&&((cores<=4&&memory<=4)||cores<=2);return{coarse,mobile,low,dpr:low?1.08:mobile?1.32:Math.min(devicePixelRatio||1,1.85),shadows:!mobile,shadowSize:mobile?512:2048,label:low?'ECONÔMICO':mobile?'MOBILE ALTO':'ALTO'};})();
 $('qualityBadge').textContent='QUALIDADE '+DEVICE_PROFILE.label;
 let renderer;
@@ -993,7 +1000,7 @@ function renderStats(){const st=SAVE.st;
 const rows=[['Recorde',SAVE.best],['Distância total',(st.dist/1000).toFixed(1).replace('.',',')+' km'],['Moedas totais',st.coins],['Corridas',st.runs],['Raspadas',st.miss],['Saltos',st.fly],['Combo máx.','×'+st.combo],['Vel. máx.',st.speed+' km/h'],['Chuva dirigida',(st.rain/1000).toFixed(1).replace('.',',')+' km'],['Carros',bits(SAVE.cars)+' / 5'],['Conquistas',bits(SAVE.ach)+' / '+ACHS.length]];
 gEl.statList.innerHTML='<div class="statgrid">'+rows.map(r=>`<div>${r[0]}<b>${r[1]}</b></div>`).join('')+'</div>';}
 function refreshGarage(){refreshGold();renderUpg();renderCars();renderAch();renderStats();gEl.codeOut.value=encodeSave();}
-function openGarage(){sfx.click();refreshGarage();el.menu.classList.add('hide');gEl.garage.classList.remove('hide');}
+function openGarage(){sfx.click();requestBrowserFullscreen();refreshGarage();el.menu.classList.add('hide');gEl.garage.classList.remove('hide');}
 function closeGarage(){sfx.click();stopShowroomLoop();gEl.garage.classList.add('hide');el.menu.classList.remove('hide');refreshGold();}
 document.querySelectorAll('.gtab').forEach(b=>{b.onclick=()=>{sfx.click();document.querySelectorAll('.gtab').forEach(x=>x.classList.toggle('on',x===b));
 ['upg','cars','ach','stats','save'].forEach(t=>$('tab-'+t).classList.toggle('hide',t!==b.dataset.tab));if(b.dataset.tab==='cars'){setShowroomCar(car());startShowroomLoop();}};});
@@ -1072,7 +1079,7 @@ groundMat.map=groundTexs[0];groundMat.needsUpdate=true;
 P.shield.visible=S.shield>0;P.g.position.set(S.px,0,0);P.tilt.rotation.set(0,0,0);P.tilt.position.set(0,0,0);
 P.tilt.scale.set(1,1,1);P.tilt.visible=true;P.rollCur=0;P.pitchCur=0;P.yawCur=0;P.steerCur=0;P.squash=0;P.nitroF=0;P.airTime=0;P.airPitch=0;
 el.shieldBox.style.display='none';}
-function startGame(){sfx.click();try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('landscape').catch(()=>{});}catch(e){}
+function startGame(){sfx.click();requestBrowserFullscreen();try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('landscape').catch(()=>{});}catch(e){}
 el.menu.classList.add('hide');el.over.classList.add('hide');el.pauseOv.classList.add('hide');gEl.garage.classList.add('hide');
 resetRun();S.mode='count';S.cdT=3.4;S.cdNum=4;el.count.textContent='3';el.count.style.display='flex';el.count.classList.remove('go');}
 function toMenu(){sfx.click();resetRun();S.mode='menu';S.speed=24;S.demoLane=2;populateMenuTraffic();

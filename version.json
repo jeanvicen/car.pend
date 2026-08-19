@@ -1,14 +1,14 @@
 {
-  "version": "3.2.0",
+  "version": "3.3.0",
   "name": "Drifin Slot",
-  "title": "Correção mobile e melhorias",
-  "message": "Interface principal corrigida para celulares, sem cortes e com melhor adaptação a diferentes telas.",
+  "title": "Tela inteira e modo imersivo",
+  "message": "O jogo agora usa a tela inteira no celular e minimiza as barras do sistema quando o dispositivo permite.",
   "releaseNotes": [
-    "Tela principal ajustada para paisagem curta, ultrawide e safe areas do Android.",
-    "Modo compacto para aparelhos com pouca altura e prevenção de aumento automático de texto.",
-    "Menu, corrida e garagem preservados e validados em diferentes proporções."
+    "Modo fullscreen para PWA instalado e tentativa de imersão no primeiro toque.",
+    "APK Android com status bar, navegação e gestos ocultos durante o jogo.",
+    "Viewport, rotação, corrida e controles preservados."
   ],
-  "cacheName": "drifin-slot-v3",
+  "cacheName": "drifin-slot-v4",
   "changeSize": "pequena",
   "releasedAt": "2026-08-19"
 }

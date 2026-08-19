@@ -21,6 +21,8 @@ A **foto anterior do carro com o pôr do sol laranja** foi restaurada como logo 
 
 ## Instalação no celular
 
+Para ocupar a tela inteira e ocultar a barra superior do Android, instale o jogo como **PWA** pelo aviso `Instalar Drifin Slot` ou use o APK/AAB Android. O PWA instalado usa `display: fullscreen` e solicita fullscreen no primeiro toque em `Ligar o Motor`; o APK aplica modo imersivo nativo, ocultando status bar, navegação e gestos enquanto o jogo está em foco. Em uma aba comum do Chrome, o sistema pode manter a barra superior por segurança; nesse caso, instale o PWA ou use o APK.
+
 Abra [`https://car-pend.vercel.app`](https://car-pend.vercel.app) no navegador do celular. No Android, use o aviso **Instalar Drifin Slot** ou o menu do Chrome e escolha **Instalar aplicativo**. No iPhone, abra pelo Safari, toque em **Compartilhar** e escolha **Adicionar à Tela de Início**. O jogo foi preparado para abrir em paisagem.
 
 ## Como os jogadores recebem uma atualização
@@ -49,22 +51,22 @@ Depois de alterar o jogo, edite `version.json`. Aumente o campo `version`, escol
 
 ```json
 {
-  "version": "2.2.0",
+  "version": "3.3.0",
   "name": "Drifin Slot",
   "title": "Nova atualização e melhorias",
   "message": "Novos ajustes de desempenho e conteúdo.",
   "releaseNotes": ["Melhorias na pista", "Correções de controles"],
-  "cacheName": "drifin-slot-v3",
+  "cacheName": "drifin-slot-v4",
   "changeSize": "média",
   "releasedAt": "2026-08-18"
 }
 ```
 
-O `cacheName` do exemplo deve ser o mesmo valor usado na primeira linha de `sw.js`. Para a versão seguinte, altere também `CACHE_NAME` para `drifin-slot-v3`. Depois, envie tudo:
+O `cacheName` do exemplo deve ser o mesmo valor usado na primeira linha de `sw.js`. Para a versão seguinte, altere também `CACHE_NAME` para `drifin-slot-v5`. Depois, envie tudo:
 
 ```bash
 git add .
-git commit -m "Release Drifin Slot 2.2.0"
+git commit -m "Release Drifin Slot 3.3.0"
 git push origin main
 ```
 
