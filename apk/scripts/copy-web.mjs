@@ -17,6 +17,6 @@ for (const dir of ['icons', 'vendor']) {
 }
 
 if (!existsSync(resolve(webDir, 'index.html'))) {
-  throw new Error('A cópia web do Sunset Rush não foi criada.');
+  throw new Error('A cópia web do Drifin Slot não foi criada.');
 }
 console.log(`Arquivos web copiados para ${webDir}`);

@@ -1,27 +1,29 @@
-# Sunset Rush · Fúria do Pôr do Sol
+# Drifin Slot
 
-Sunset Rush é um jogo de corrida arcade em paisagem, ambientado na Rota 66. A experiência original foi preservada: corrida, carros, upgrades, conquistas, biomas, pontuação, controles por toque, teclado e sistema de save continuam no mesmo arquivo principal.
+Drifin Slot é um jogo de corrida arcade 3D em paisagem, ambientado na Rota 66 e redesenhado para celular e PC. A modernização preserva a base de corrida, carros, upgrades, conquistas, biomas, pontuação, controles por toque, teclado e sistema de save, enquanto melhora identidade visual, apresentação dos veículos, garagem, desempenho, iluminação, animações, áudio e resposta de drift.
 
-## O que está preparado
+## O que foi modernizado
 
-O projeto agora também possui um **PWA instalável**. O jogo pode ser aberto pelo navegador do celular e adicionado à tela inicial como um aplicativo, com ícone próprio, orientação paisagem, carregamento local do motor 3D e funcionamento básico sem conexão depois do primeiro acesso.
+A nova direção visual usa painéis glass, ciano, violeta, âmbar e azul profundo, com uma interface mais legível em telas pequenas. O menu agora usa a marca Drifin Slot, os ícones foram substituídos pela logo neon do carro e os cards da garagem ganharam uma apresentação mais rica. A aba de carros possui um **showroom 3D** que reutiliza os mesmos meshes procedurais da pista e acompanha a seleção atual.
+
+O renderer passou a escolher automaticamente um perfil **Econômico**, **Mobile** ou **Alto**, limitando pixel ratio, antialiasing e sombras de acordo com o aparelho. A simulação ganhou uma resposta lateral mais natural para aderência normal, freio e chuva. Também foi removido o cálculo de normais da água quando o mar não está visível na pista, evitando trabalho desnecessário por frame em celulares.
 
 | Arquivo | Função |
 | --- | --- |
-| `index.html` | Jogo original e interface, com ajustes técnicos de publicação e carregamento local do Three.js. |
-| `manifest.webmanifest` | Nome, ícones, cores, orientação e modo instalável. |
-| `sw.js` | Cache do aplicativo e atualização controlada dos arquivos estáticos. |
-| `vendor/three.min.js` | Cópia local do Three.js para reduzir a dependência de CDN. |
-| `icons/` | Ícones da logo para PWA, navegador e tela inicial. |
-| `vercel.json` | Cabeçalhos para que o HTML e o service worker recebam atualizações corretamente. |
+| `index.html` | Jogo, interface Drifin Slot, renderer adaptativo, showroom e lógica original de corrida. |
+| `manifest.webmanifest` | Nome, logo, cores, orientação e modo instalável. |
+| `sw.js` | Cache do aplicativo e atualização do pacote `drifin-slot-v1`. |
+| `vendor/three.min.js` | Cópia local do Three.js. |
+| `icons/` | Logo Drifin Slot para PWA, navegador, iPhone e Android. |
+| `assets/` | Referência visual e originais de direção de arte. |
+| `apk/` | Projeto Capacitor para gerar APK/AAB Android. |
+| `PLAN.md`, `STRUCTURE.md`, `MEMORY.md`, `ASSETS.md` | Plano, arquitetura, decisões e inventário de assets da modernização. |
 
 ## Instalar no celular
 
-Abra [`https://car-pend.vercel.app`](https://car-pend.vercel.app) no navegador do celular. No Android, use o menu do navegador e escolha **Instalar aplicativo** ou **Adicionar à tela inicial**. No iPhone, abra pelo Safari, toque em **Compartilhar** e escolha **Adicionar à Tela de Início**. Depois disso, o jogo aparece com o ícone do carro e abre em modo de aplicativo, normalmente em paisagem.
+Abra [`https://car-pend.vercel.app`](https://car-pend.vercel.app) no navegador do celular. No Android, use o aviso **Instalar Drifin Slot** ou o menu do Chrome e escolha **Instalar aplicativo**. No iPhone, abra pelo Safari, toque em **Compartilhar** e escolha **Adicionar à Tela de Início**. O jogo foi preparado para abrir em paisagem.
 
-A instalação depende de o endereço estar publicado com HTTPS. O endereço atual do projeto já usa HTTPS.
-
-## Como atualizar o jogo para todos
+## Atualizar para todos os jogadores
 
 O ponto correto para enviar alterações é este repositório GitHub, na branch `main`:
 
@@ -29,11 +31,7 @@ O ponto correto para enviar alterações é este repositório GitHub, na branch 
 https://github.com/jeanvicen/car.pend
 ```
 
-O site atual está associado ao projeto Vercel que publica [`https://car-pend.vercel.app`](https://car-pend.vercel.app). Portanto, o fluxo recomendado é:
-
-1. Alterar os arquivos localmente, preservando a lógica de corrida.
-2. Testar o jogo no celular e no computador.
-3. Enviar as alterações para a branch `main`:
+O fluxo local é:
 
 ```bash
 git add .
@@ -41,29 +39,27 @@ git commit -m "Descreva a alteração"
 git push origin main
 ```
 
-4. A Vercel fará um novo deploy automaticamente quando o projeto estiver conectado ao GitHub.
-5. Os jogadores continuarão usando o mesmo endereço. O service worker foi configurado para buscar versões novas, e a atualização do cache também pode ser forçada fechando e abrindo o aplicativo uma vez.
-
-Se uma alteração for feita diretamente pelo editor do GitHub, use **Commit changes** na branch `main`; o resultado será o mesmo: o deploy será iniciado pelo vínculo GitHub–Vercel.
-
-## Aviso de instalação no Chrome
-
-Quando o Chrome Android liberar o modo instalável, o jogo exibirá o aviso **Instalar Sunset Rush** com o botão **Instalar**. Esse botão abre o prompt oficial do navegador e adiciona o jogo à tela inicial como aplicativo. Se o navegador não oferecer o prompt automático, o aviso orienta o usuário a abrir o menu do Chrome e escolher **Instalar aplicativo**. No iPhone e iPad, o aviso explica o caminho do Safari por **Compartilhar → Adicionar à Tela de Início**.
+O site atual está associado à Vercel e continua usando [`https://car-pend.vercel.app`](https://car-pend.vercel.app). O deploy ocorre após o envio para `main`. Para alterações do jogo, não remova os IDs dos controles, as chaves de `localStorage` nem o formato do save. Ao mudar arquivos do app, incremente `CACHE_NAME` em `sw.js`, por exemplo para `drifin-slot-v2`, para renovar o cache nos aparelhos.
 
 ## APK Android
 
-A pasta [`apk/`](./apk/) contém a preparação do pacote Android com Capacitor. Ela copia o mesmo jogo web para uma aplicação Android, fixa a orientação paisagem e usa a logo do carro no launcher. Para gerar um APK de teste, consulte [`apk/README.md`](./apk/README.md) e execute `npm install`, `npm run sync` e `npm run build-debug` em um computador com Android Studio e Android SDK configurados. A jogabilidade não é reescrita nem modificada nesse processo.
+A pasta [`apk/`](./apk/) contém a embalagem Capacitor. O `applicationId` Android permanece `com.klipzastudio.sunsetrush` para permitir continuidade das instalações já existentes, mas o nome visível do aplicativo é **Drifin Slot**. Para gerar um APK de teste, use um computador com Node.js, Java, Android Studio e Android SDK:
 
-## Regra para futuras alterações
+```bash
+cd apk
+npm install
+npm run sync
+npm run build-debug
+```
 
-Não remova `manifest.webmanifest`, `sw.js`, `vendor/three.min.js` ou a pasta `icons/`. Se o jogo for alterado, aumente a versão em `CACHE_NAME` dentro de `sw.js`, por exemplo de `sunset-rush-v1` para `sunset-rush-v2`, para garantir que todos os arquivos estáticos sejam renovados no próximo acesso.
+O APK fica em `apk/android/app/build/outputs/apk/debug/app-debug.apk`. Para publicação na Google Play, configure uma chave de assinatura privada e gere o bundle release com `npm run build-release`. Senhas e chaves de assinatura nunca devem entrar no GitHub.
 
 ## Teste local
 
-Como o service worker exige um contexto seguro, teste por um servidor local, e não abrindo `index.html` diretamente pelo explorador de arquivos. Um exemplo simples é:
+Como o service worker exige um contexto seguro, teste usando um servidor HTTP local:
 
 ```bash
 python3 -m http.server 4173
 ```
 
-Depois, abra `http://localhost:4173` no navegador.
+Depois, abra `http://localhost:4173` no navegador. A tag `drifin-slot-baseline-3f3c485` aponta para a versão funcional anterior caso seja necessário comparar ou reverter.

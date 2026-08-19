@@ -1,4 +1,4 @@
-# Sunset Rush para Android
+# Drifin Slot para Android
 
 Esta pasta prepara o empacotamento do jogo web em um aplicativo Android usando **Capacitor**. O arquivo principal do jogo continua em `../index.html`; a pasta `www/` é apenas uma cópia gerada para o projeto nativo. Assim, a jogabilidade não precisa ser reescrita nem duplicada.
 
@@ -61,4 +61,4 @@ Para uma nova versão pública, aumente `versionCode` e `versionName` no projeto
 
 ## Observação sobre o aviso de instalação
 
-No Chrome Android, o jogo mostra o aviso **Instalar Sunset Rush** quando o navegador oferece o evento oficial de instalação. Ao tocar em **Instalar**, o prompt nativo do Chrome é aberto. Em iPhone/iPad, o botão mostra a instrução equivalente do Safari, porque o iOS não expõe o mesmo prompt automático do Chrome.
+No Chrome Android, o jogo mostra o aviso **Instalar Drifin Slot** quando o navegador oferece o evento oficial de instalação. Ao tocar em **Instalar**, o prompt nativo do Chrome é aberto. Em iPhone/iPad, o botão mostra a instrução equivalente do Safari, porque o iOS não expõe o mesmo prompt automático do Chrome.

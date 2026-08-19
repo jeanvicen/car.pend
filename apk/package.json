@@ -1,8 +1,8 @@
 {
-  "name": "sunset-rush-android",
+  "name": "drifin-slot-android",
   "version": "1.0.0",
   "private": true,
-  "description": "Empacotamento Android do jogo Sunset Rush sem alterar a versão web.",
+  "description": "Empacotamento Android do jogo Drifin Slot com a mesma base de corrida.",
   "type": "module",
   "scripts": {
     "copy-web": "node scripts/copy-web.mjs",
