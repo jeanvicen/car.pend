@@ -115,3 +115,63 @@ Na prévia local, `requestFullscreen({ navigationUI: 'hide' })` ficou disponíve
 ## Deploy público da tela inteira 3.3.0
 
 A Vercel passou a servir `version.json` na versão `3.3.0` com `cacheName: drifin-slot-v4`. A página pública carregou o menu e o canvas normalmente e exibiu o aviso `Tela inteira e modo imersivo` com os botões `Atualizar` e `Depois`.
+
+## Pesquisa inicial para a próxima modernização
+
+A documentação oficial do Babylon.js confirma suporte a materiais PBR, incluindo `PBRMetallicRoughnessMaterial`, metalness, roughness, mapas de metallic/roughness, environment texture e iluminação dinâmica com unidades físicas. Isso é útil para carroceria, vidro, pneus, cromados e superfícies molhadas, mas não justifica uma migração automática.
+
+A documentação oficial do Three.js lista `PerspectiveCamera`, `MeshPhysicalMaterial`, `InstancedMesh`, `LOD`, `PMREMGenerator`, WebGL e WebGPU como recursos disponíveis na linha atual. A base do projeto usa Three.js r128 localmente; a estratégia mais segura é evoluir a base existente e atualizar o renderer somente em fatias testadas, em vez de reescrever o jogo inteiro.
+
+Fontes consultadas: https://doc.babylonjs.com/features/featuresDeepDive/materials/using/introToPBR e https://threejs.org/docs/.
+
+## Decisão de motor para a modernização profunda
+
+A pesquisa comparou Babylon.js e Three.js. Babylon.js oferece uma camada de engine mais completa e PBR bem documentado, enquanto Three.js oferece os blocos necessários para a evolução: `PerspectiveCamera`, `MeshPhysicalMaterial`, `InstancedMesh`, `LOD`, `PMREMGenerator`, WebGL e WebGPU. Como o Drifin Slot já tem uma cena Three.js funcional, física, pools de objetos, PWA, APK, save e progressão, a decisão é **não migrar o jogo inteiro agora**. A evolução será feita sobre Three.js com uma camada interna de câmeras, materiais, carros, clima e qualidade. Isso reduz risco de quebrar o jogo e ainda permite usar PBR, environment lighting, instancing e LOD gradualmente.
+
+A migração para Babylon.js fica como uma possibilidade futura somente se uma fatia isolada provar ganho concreto em um dispositivo-alvo. Para este ciclo, o objetivo é melhorar a imagem e a jogabilidade, não trocar a fundação por outra sem necessidade.
+
+## Primeiro slice da câmera interna
+
+Foi adicionado o botão `btnCamera`, a tecla `C`/`V` e a alternância entre `chase` e `cockpit`. O cockpit possui painel, volante, cubo central, bancos, pilares e para-brisa translúcido. A primeira captura revelou interferência da carroceria externa; a cabine foi separada e ocultada no cockpit. Na segunda validação, a pista, horizonte, sinalização e sol ficaram livres, o HUD continuou íntegro, a velocidade atualizou e o aviso `◉ Visão interna` apareceu durante a corrida.
+
+## Referência visual da modernização
+
+Foi criada `assets/drifin-slot-visual-target.png` como alvo artístico: carro esportivo angular com pintura metálica PBR, vidro e cockpit visível, pneus e rodas detalhados, iluminação quente de pôr do sol, neon ciano, estrada com textura e sinalização, postes, cactos e mesas ao fundo. A imagem serve como referência visual; a implementação continua procedural e otimizada em Three.js para preservar compatibilidade mobile.
+
+## Melhorias visuais da etapa de carros e estrada
+
+A pintura dos carros passou a usar `MeshPhysicalMaterial` com metalness, roughness, clearcoat e environment map compartilhado. A função de roda agora inclui pneu, disco de freio, aro metálico e pinça colorida, reutilizada no jogador, tráfego e showroom. O menu informa `C · Visão interna / externa`. Os marcos laterais foram enriquecidos com base, faixa vermelha, refletor emissivo e brilho noturno por bioma.
+
+A prévia continuou carregando depois do PBR; a corrida iniciou, a contagem apareceu e a câmera interna alternou para `◉ Visão interna` sem erro visível.
+
+A validação seguinte confirmou o novo chip `C Visão interna / externa` na tela principal. A corrida iniciou normalmente depois das alterações; cenário, sinalização, marcos laterais, estrada, HUD e carro permaneceram renderizando sem erro visível.
+
+## Validação do showroom atualizado
+
+Após recarregar a prévia, a garagem abriu sem erros e a aba `Carros` exibiu o showroom 3D, o carro Chama, o piso reflexivo com environment map, o painel de metadados e os cinco cards de veículos. Upgrades, conquistas e save continuam presentes no mesmo fluxo.
+
+A regressão após `addCarTrim` passou: a largada apareceu normalmente, o carro do jogador mostrou espelhos laterais, grade frontal, aerofólio, faixa, rodas e acabamento PBR; o cenário continuou estável e não houve erro visível de inicialização.
+
+## Validação final da visão interna
+
+A visão interna foi refinada após três capturas: rodas externas e efeitos inferiores foram ocultados no cockpit; o pilar lateral foi reduzido e finalmente desativado para eliminar o bloqueio visual. A captura final mostra a pista, horizonte, placas e postes livres, com apenas o painel/console ciano na parte inferior. O HUD, velocidade, controles e o estado `◉ Visão interna` continuam funcionando durante a corrida.
+
+## Refinamento de física e resposta visual
+
+A carroceria agora incorpora uma transferência de peso visual discreta em aceleração/freio e deslocamento lateral da suspensão, além do roll de curva já existente. A validação passou: a corrida iniciou, a contagem avançou, `ArrowLeft` foi aceito, a velocidade mudou e o HUD permaneceu responsivo sem travamento.
+
+## Áudio de drift
+
+Foi adicionada uma camada de ruído filtrado para pneu/asfalto, com ganho e frequência proporcionais ao drift e zerados fora da corrida. O áudio é criado apenas no primeiro gesto, compartilha o buffer já existente e não cria fontes por quadro. A prévia iniciou a corrida e a contagem normalmente após a alteração.
+
+## Matriz visual preliminar de dispositivos
+
+Foram capturadas as telas `320x568`, `360x800`, `640x360` e `854x480`. Nos screenshots físicos em retrato, o conteúdo aparece rotacionado 90 graus porque o jogo solicita landscape e aplica a rotação CSS enquanto o headless permanece em portrait; isso não representa a orientação final após o sistema rotacionar o aparelho. Os elementos permanecem presentes e o menu segue compacto. As capturas paisagem serão usadas para avaliar corte e legibilidade diretamente.
+
+As capturas paisagem `640x360` e `854x480` passaram visualmente: logo, painel de recorde, instruções, chip `C Visão interna / externa`, botões `Ligar o Motor`/`Garagem`, HUD e controles permanecem dentro da área útil. O aviso de instalação ocupa uma faixa inferior independente, sem cortar os botões principais.
+
+A captura ultrawide `1604x720` também passou: o logo e o painel ficam centralizados em largura máxima confortável, o espaço extra vira cenário de fundo, e HUD, chip de câmera, botões e aviso de instalação permanecem dentro da viewport sem deformação ou corte.
+
+## Regressão funcional completa
+
+Na sessão limpa, o menu abriu com Recorde 1366 e moedas 481 preservados. A garagem abriu com Upgrades, Conquistas, Estatísticas e Save; a aba `Carros` mostrou o showroom e os cinco veículos; `Voltar` retornou ao menu com os botões e o HUD intactos. A navegação do showroom foi concluída sem erro visível.

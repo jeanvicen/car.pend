@@ -1,14 +1,16 @@
 {
-  "version": "3.3.0",
+  "version": "4.0.0",
   "name": "Drifin Slot",
-  "title": "Tela inteira e modo imersivo",
-  "message": "O jogo agora usa a tela inteira no celular e minimiza as barras do sistema quando o dispositivo permite.",
+  "title": "Câmera interna e visual renovado",
+  "message": "Nova visão dentro do carro, carros mais detalhados, cenário mais vivo e direção refinada.",
   "releaseNotes": [
-    "Modo fullscreen para PWA instalado e tentativa de imersão no primeiro toque.",
-    "APK Android com status bar, navegação e gestos ocultos durante o jogo.",
-    "Viewport, rotação, corrida e controles preservados."
+    "Visão externa de perseguição e visão interna com cockpit, volante e painel emissivo; tecla C ou botão ◉ para alternar.",
+    "Carros com pintura física, rodas com aro, disco e pinça, espelhos, grade e aerofólio; showroom com ambiente refletivo.",
+    "Cenário com marcos refletivos, brilho de estrada em chuva/noite, clima e iluminação mais coerentes.",
+    "Transferência de peso visual, feedback de drift e camada de áudio de pneu/asfalto; desempenho econômico preservado.",
+    "Corrida, upgrades, conquistas, save, PWA, controles mobile e APK preservados."
   ],
-  "cacheName": "drifin-slot-v4",
-  "changeSize": "pequena",
+  "cacheName": "drifin-slot-v5",
+  "changeSize": "média",
   "releasedAt": "2026-08-19"
 }

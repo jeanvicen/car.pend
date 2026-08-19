@@ -25,6 +25,12 @@ Para ocupar a tela inteira e ocultar a barra superior do Android, instale o jogo
 
 Abra [`https://car-pend.vercel.app`](https://car-pend.vercel.app) no navegador do celular. No Android, use o aviso **Instalar Drifin Slot** ou o menu do Chrome e escolha **Instalar aplicativo**. No iPhone, abra pelo Safari, toque em **Compartilhar** e escolha **Adicionar à Tela de Início**. O jogo foi preparado para abrir em paisagem.
 
+## Câmeras e modernização visual
+
+Durante a corrida, use o botão `◌` no HUD ou pressione `C`/`V` para alternar entre a câmera externa de perseguição e a **visão interna do carro**. O cockpit mostra painel, volante, display emissivo e para-brisa translúcido; a carroceria externa, rodas e efeitos inferiores são ocultados nessa visão para manter a pista livre e a leitura correta em telas pequenas.
+
+A modernização 4.0.0 mantém o Three.js local como base de renderização, em vez de migrar todo o jogo para Babylon.js. Essa decisão preserva a compatibilidade offline, os pools de objetos, o PWA, o APK, a física e o save; os ganhos vêm de materiais físicos leves, ambiente refletivo, carros com rodas detalhadas, marcos refletivos, clima, transferência de peso visual e áudio de pneus proporcional ao drift.
+
 ## Como os jogadores recebem uma atualização
 
 O fluxo de atualização já está no jogo. Quando uma pessoa que já possui save abrir uma versão nova, o jogo consulta `version.json` sem cache e mostra:
@@ -51,22 +57,22 @@ Depois de alterar o jogo, edite `version.json`. Aumente o campo `version`, escol
 
 ```json
 {
-  "version": "3.3.0",
+  "version": "4.0.0",
   "name": "Drifin Slot",
-  "title": "Nova atualização e melhorias",
-  "message": "Novos ajustes de desempenho e conteúdo.",
-  "releaseNotes": ["Melhorias na pista", "Correções de controles"],
-  "cacheName": "drifin-slot-v4",
+  "title": "Câmera interna e visual renovado",
+  "message": "Nova visão dentro do carro, carros mais detalhados, cenário mais vivo e direção refinada.",
+  "releaseNotes": ["Câmera interna e cockpit", "Carros PBR e showroom renovado", "Clima, cenário e drift com áudio"],
+  "cacheName": "drifin-slot-v5",
   "changeSize": "média",
-  "releasedAt": "2026-08-18"
+  "releasedAt": "2026-08-19"
 }
 ```
 
-O `cacheName` do exemplo deve ser o mesmo valor usado na primeira linha de `sw.js`. Para a versão seguinte, altere também `CACHE_NAME` para `drifin-slot-v5`. Depois, envie tudo:
+O `cacheName` do exemplo deve ser o mesmo valor usado na primeira linha de `sw.js`. Para a versão seguinte, altere também `CACHE_NAME` para `drifin-slot-v6`. Depois, envie tudo:
 
 ```bash
 git add .
-git commit -m "Release Drifin Slot 3.3.0"
+git commit -m "Release Drifin Slot 4.0.0 visual modernization"
 git push origin main
 ```
 
