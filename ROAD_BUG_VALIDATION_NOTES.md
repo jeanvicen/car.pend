@@ -38,3 +38,11 @@ Data: 2026-08-19
 - O novo intervalo `fog.far = 240→185` não encurtou o horizonte a ponto de apagar o asfalto.
 - O ajuste dos planos de terreno para `y=-1.15` também evitou que a superfície do solo cobrisse a estrada nas ondulações.
 - Ainda será feita uma checagem após o pico de chuva e na noite seguinte; depois disso, a chave temporária de diagnóstico será removida antes de qualquer publicação.
+
+## Validação pública após o push 02699ac
+
+A Vercel passou a entregar `version.json` 4.2.1 com `drifin-slot-v8` e `changeSize=pequena`. O `sw.js` público também declara `CACHE_NAME = 'drifin-slot-v8'` e preserva o fluxo de instalação, ativação, `SKIP_WAITING`, atualização de `version.json` sem cache e cache-first dos demais recursos.
+
+Na página pública, o aviso `Hotfix de visibilidade da estrada` apareceu com os botões `Atualizar` e `Depois`; ao acionar `Atualizar`, o aviso fechou e o menu preservou recorde 1428 e 697 moedas. Uma corrida pública iniciou com contagem regressiva 3 e, em 0,10 km/82 km/h, a estrada, carro, cenário, HUD e controles estavam visíveis. A confirmação de colisão normal permanece respaldada pelo código publicado sem `window.__drifinNoCollision`.
+
+A corrida pública avançou sem o diagnóstico temporário até 0,29 km, a 88 km/h, com score 494 e combo 1,2; a captura mostrou a estrada completa, tráfego e HUD funcionando. Isso confirma que o caminho público não está usando a chave de colisões desativadas.
