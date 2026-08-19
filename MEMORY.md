@@ -179,3 +179,23 @@ Na sessão limpa, o menu abriu com Recorde 1366 e moedas 481 preservados. A gara
 ## Deploy público da modernização 4.0.0
 
 O endpoint público confirmou a versão `4.0.0`, `cacheName: drifin-slot-v5` e as release notes da modernização. A página pública carregou menu, HUD, botão de câmera e aviso `Câmera interna e visual renovado`. A corrida pública iniciou com a contagem, e o clique no botão alterou o estado para `◉ Visão interna`; a captura mostrou horizonte/pista livres e o cockpit/painel na parte inferior.
+
+## Auditoria pública de instalação e interface
+
+Os cabeçalhos públicos da Vercel retornaram `200` para `index.html`, `manifest.webmanifest`, `sw.js` e `version.json`; HTML/manifest ficaram sem cache, enquanto o service worker e version.json usam `no-cache, no-store, must-revalidate`. No navegador público, o manifest link, o service worker controlando a página, `display: fullscreen`, canvas e todos os IDs críticos foram confirmados. A corrida pública iniciou, a visão interna alternou para `◉`, e o jogo chegou naturalmente ao game over com pontuação, ganhos, distância, moedas, combo, recorde, trecho e os botões `Jogar de novo`/`Início`. Após recarregar, o novo recorde e moedas permaneceram no save.
+
+Na segunda corrida pública, `Ligar o Motor` iniciou nova contagem e gameplay. O botão de áudio alternou de `🔊` para `🔇` durante o movimento, enquanto velocidade, canvas, HUD e controles permaneceram ativos.
+
+Na segunda corrida pública, a câmera alternou para `◉ Visão interna` com o cockpit limpo. O HUD manteve score, distância, velocidade e nitro; `ArrowLeft` respondeu durante o movimento, alterando a trajetória/valores sem travar o renderer.
+
+O botão de pausa público abriu o overlay `Pausado` com `Continuar`, `Reiniciar`, `Início` e `Copiar código`, além das instruções dos controles. `Continuar` fechou o overlay e retomou a corrida com a visão interna, score, distância e combo ativos.
+
+Após a pausa, o som foi reativado para `🔊`; em seguida, `Space` acionou o nitro durante a visão interna, com aumento de score/velocidade e barra N₂O disponível. O tráfego, a pista e o cockpit permaneceram renderizando.
+
+Na sessão pública reaberta, a garagem carregou com `697` moedas e recorde `1428` preservados. A aba Upgrades mostrou seis melhorias e conquistas; a aba `Carros` mostrou `3D SHOWROOM`, o carro em uso `Chama`, os carros `Brisa`, `Coruja`, `Rino` e `Fantasma`, barras de atributos e botões de compra.
+
+As abas públicas `Conquistas` e `Estatísticas` também passaram. Conquistas exibiu `1/16`, Primeira Saída concluída e progresso das demais metas; Estatísticas exibiu recorde `1428`, distância total `2,7 km`, moedas `19`, `5` corridas, `4` raspadas, combo máximo `×6`, velocidade máxima `100 km/h`, carros `1/5` e conquistas `1/16`.
+
+A aba `Save` pública exibiu o código de progresso, textarea de importação e botões `Copiar código`, `Atualizar` e `Importar save`. O clique em `Copiar código` mostrou o toast `Código copiado — guarde bem!` sem substituir o progresso atual.
+
+Auditoria pública concluída: após a aba `Save`, o handler público de `btnGarBack` deixou `#garage` com classe `ov hide` e `#menu` com classe `ov`; a visualização seguinte confirmou o menu principal com `Ligar o Motor`, `Garagem`, recorde `1428` e moedas `697`. O primeiro clique anotado ficou sem efeito por snapshot obsoleto, mas o handler real e o retorno visual funcionaram.
