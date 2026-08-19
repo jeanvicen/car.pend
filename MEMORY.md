@@ -241,3 +241,17 @@ Após recarregar o preview, a garagem abriu normalmente. A aba `Carros` exibiu o
 ## Atualização local da release 4.2.0
 
 O preview exibiu o aviso `Estrada viva, cockpit animado e clima adaptativo`, marcou a alteração como `grande` e ofereceu `Atualizar`. Após o clique, o painel fechou e o menu principal permaneceu renderizando com canvas, carro, HUD, botões e cartão do veículo. A leitura direta de `localStorage` foi bloqueada pela sessão automatizada; esse diagnóstico foi descartado, sem afetar a validação visual e funcional.
+
+## Auditoria pública 4.2.0
+
+A Vercel passou a entregar `version.json` 4.2.0, `drifin-slot-v7`, o aviso `Estrada viva, cockpit animado e clima adaptativo` e o módulo `vehicle-engine.js`. O menu público preservou o save existente com recorde `1428` e `697` moedas. Após fechar o aviso por `Depois`, `Ligar o Motor` iniciou a contagem `3/1/GO!!`; a corrida chegou a score `11`, distância `0,03 km` e `80 km/h`.
+
+Na corrida pública, `btnCamera` alternou para `◉ Visão interna`; o cockpit mostrou volante, mãos/antebraços, painel e estrada livre. `ArrowLeft` respondeu nessa visão, chegando a score `72`, distância `0,15 km` e `84 km/h`, sem travamento visível.
+
+A regressão pública da pausa 4.2.0 passou: o overlay mostrou `Continuar`, `Reiniciar`, `Início` e `Copiar código` com a visão interna preservada. `Continuar` retomou a corrida sem perder estado; a sessão avançou para score `145`, distância `0,30 km` e `88 km/h`.
+
+A navegação pública 4.2.0 pós-corrida passou: `Início` retornou ao menu com recorde `1428`, `697` moedas e Chama preservados; `Garagem` abriu com Upgrades, Conquistas, Estatísticas e Save. A aba `Carros` exibiu o `3D SHOWROOM`, cinco veículos e os perfis de condução. A aba `Save` exibiu o código, e `Copiar código` mostrou `Código copiado — guarde bem!` sem substituir o progresso.
+
+## Matriz visual headless 4.2.0
+
+As capturas locais em `640×360` e `1604×720` mantiveram logo, painel de controles, cartão do Chama, botões `Ligar o Motor`/`Garagem`, HUD e aviso de instalação dentro da viewport, sem corte. O Chromium headless exibiu o fallback `Falha ao iniciar o motor 3D` por não fornecer WebGL nessa modalidade; a validação 3D confiável foi feita no navegador interativo local e no deploy público, onde canvas, corrida, cockpit e showroom renderizaram normalmente.
