@@ -199,3 +199,19 @@ As abas públicas `Conquistas` e `Estatísticas` também passaram. Conquistas ex
 A aba `Save` pública exibiu o código de progresso, textarea de importação e botões `Copiar código`, `Atualizar` e `Importar save`. O clique em `Copiar código` mostrou o toast `Código copiado — guarde bem!` sem substituir o progresso atual.
 
 Auditoria pública concluída: após a aba `Save`, o handler público de `btnGarBack` deixou `#garage` com classe `ov hide` e `#menu` com classe `ov`; a visualização seguinte confirmou o menu principal com `Ligar o Motor`, `Garagem`, recorde `1428` e moedas `697`. O primeiro clique anotado ficou sem efeito por snapshot obsoleto, mas o handler real e o retorno visual funcionaram.
+
+## Início da modernização 4.1.0
+
+A prévia local `http://localhost:4181/` carregou `vehicle-engine.js` e mostrou o novo cartão `CARRO ATUAL · Chama · DRIFT BALANCEADO · EQUILIBRADO` no menu. Os botões Ligar o Motor/Garagem continuaram acessíveis. O clique de largada iniciou a contagem `3` e depois `1`, com estrada, cenário, carro, HUD, controles e nitro renderizando sem erro visível.
+
+A corrida local 4.1.0 saiu da contagem normalmente e registrou score `30`, distância `0,07 km` e velocidade `81 km/h`; depois chegou a `0,20 km` e `85 km/h`. `ArrowLeft` respondeu alterando a trajetória, e `Space` manteve a corrida/nitro funcionando, com HUD, pista, coleta e cenário estáveis.
+
+O overlay de pausa da 4.1.0 exibiu Continuar, Reiniciar, Início e Copiar código com alvos de toque maiores. O botão Início fechou a pausa e reapresentou o menu com Ligar o Motor, Garagem, cartão do Chama e perfil DRIFT BALANCEADO.
+
+A garagem local 4.1.0 abriu com cabeçalho e tabs mobile renovados. A aba `Carros` mostrou o showroom 3D e os cinco veículos com perfis visíveis: Chama `DRIFT BALANCEADO`, Brisa `DRIFT ÁGIL`, Coruja `DRIFT VELOCIDADE`, Rino `DRIFT BLINDADO` e Fantasma `DRIFT COMPLETO`. O painel ficou rolável e sem corte visível.
+
+A aba `Save` local 4.1.0 permaneceu completa, com código de 46 caracteres, Copiar código, Atualizar e Importar save. `Copiar código` mostrou `Código copiado — guarde bem!`. O botão `Voltar` fechou a garagem e retornou ao menu com o cartão do Chama e os botões principais.
+
+Matriz visual local 4.1.0: em `640x360`, logo, recorde, instruções, cartão do Chama, botões Ligar o Motor/Garagem e aviso de instalação ficaram completos e legíveis. Em `375x812`, o jogo aplicou o fallback previsto de rotação CSS para paisagem; os elementos permaneceram presentes e o aviso de instalação ficou dentro da área rotacionada.
+
+A checagem no navegador confirmou `typeof DrifinVehicleEngine === "function"`, cinco perfis carregados e o menu sincronizado com `Chama`, `DRIFT BALANCEADO` e `EQUILIBRADO`. O console não apresentou exceções após corrida, pausa, garagem, save e matriz mobile.

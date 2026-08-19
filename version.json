@@ -1,16 +1,16 @@
 {
-  "version": "4.0.0",
+  "version": "4.1.0",
   "name": "Drifin Slot",
-  "title": "Câmera interna e visual renovado",
-  "message": "Nova visão dentro do carro, carros mais detalhados, cenário mais vivo e direção refinada.",
+  "title": "Física modular e menus mobile renovados",
+  "message": "Veículos com perfis de direção atualizáveis, suspensão visual e menus mais rápidos e confortáveis no celular.",
   "releaseNotes": [
-    "Visão externa de perseguição e visão interna com cockpit, volante e painel emissivo; tecla C ou botão ◉ para alternar.",
-    "Carros com pintura física, rodas com aro, disco e pinça, espelhos, grade e aerofólio; showroom com ambiente refletivo.",
-    "Cenário com marcos refletivos, brilho de estrada em chuva/noite, clima e iluminação mais coerentes.",
-    "Transferência de peso visual, feedback de drift e camada de áudio de pneu/asfalto; desempenho econômico preservado.",
-    "Corrida, upgrades, conquistas, save, PWA, controles mobile e APK preservados."
+    "Novo módulo local Drifin Vehicle Engine, sem dependências, com aceleração, freio, aderência, drift, chuva e suspensão configuráveis por veículo.",
+    "Cada carro agora tem um perfil de condução visível na garagem e no menu, facilitando balanceamento e futuras atualizações sem mexer no save.",
+    "Menus mobile renovados com cartão do carro atual, alvos de toque maiores, tabs roláveis, painéis compactos e suporte seguro a paisagem curta e retrato de fallback.",
+    "Service worker atualizado para drifin-slot-v6; o módulo de física entra no app shell offline e também é copiado para o APK Capacitor.",
+    "Corrida, upgrades, conquistas, save, PWA, câmeras, controles, áudio e progressão preservados."
   ],
-  "cacheName": "drifin-slot-v5",
+  "cacheName": "drifin-slot-v6",
   "changeSize": "média",
   "releasedAt": "2026-08-19"
 }

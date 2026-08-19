@@ -11,6 +11,7 @@ A **foto anterior do carro com o pôr do sol laranja** foi restaurada como logo 
 | Arquivo | Função |
 | --- | --- |
 | `index.html` | Jogo, interface, showroom, controles e sistema de atualização. |
+| `vehicle-engine.js` | Motor modular de veículos: aceleração, freio, aderência, drift, chuva e suspensão visual por perfil. |
 | `manifest.webmanifest` | Nome, logo, cores, orientação e instalação PWA. |
 | `version.json` | Versão publicada, descrição da atualização e estimativa de tamanho. |
 | `sw.js` | Cache do aplicativo, atualização segura e limpeza de versões antigas. |
@@ -29,7 +30,15 @@ Abra [`https://car-pend.vercel.app`](https://car-pend.vercel.app) no navegador d
 
 Durante a corrida, use o botão `◌` no HUD ou pressione `C`/`V` para alternar entre a câmera externa de perseguição e a **visão interna do carro**. O cockpit mostra painel, volante, display emissivo e para-brisa translúcido; a carroceria externa, rodas e efeitos inferiores são ocultados nessa visão para manter a pista livre e a leitura correta em telas pequenas.
 
-A modernização 4.0.0 mantém o Three.js local como base de renderização, em vez de migrar todo o jogo para Babylon.js. Essa decisão preserva a compatibilidade offline, os pools de objetos, o PWA, o APK, a física e o save; os ganhos vêm de materiais físicos leves, ambiente refletivo, carros com rodas detalhadas, marcos refletivos, clima, transferência de peso visual e áudio de pneus proporcional ao drift.
+A modernização 4.0.0 mantém o Three.js local como base de renderização, em vez de migrar todo o jogo para Babylon.js. Essa decisão preserva a compatibilidade offline, os pools de objetos, o PWA, o APK, a física e o save; os ganhos vêm de materiais físicos leves, ambiente refletivo, carros com rodas detalhadas, marcos refletivos, clima, transferência de peso visual e áudio de pneus proporcional ao drift. A release 4.1.0 acrescenta uma camada de dinâmica local, sem dependências externas, para deixar os veículos fáceis de balancear e atualizar.
+
+## Motor modular dos veículos
+
+O arquivo `vehicle-engine.js` concentra os perfis de direção dos cinco carros. Cada perfil possui multiplicador de velocidade, aceleração, desaceleração, força de direção, aderência seca/molhada, damping lateral, eficiência do nitro, escala de drift, resposta visual, transferência de peso e curso de suspensão. O `index.html` continua responsável pela progressão, colisões, pontuação e renderização; o módulo calcula a resposta do veículo e devolve valores para o loop.
+
+Para ajustar um carro, altere somente o objeto correspondente em `PROFILES` dentro de `vehicle-engine.js`. Os IDs são estáveis: `0` Chama, `1` Brisa, `2` Coruja, `3` Rino e `4` Fantasma. A garagem e o menu leem o mesmo perfil e mostram o rótulo de condução, evitando uma segunda fonte de verdade. Não é necessário alterar `sr_save`, o formato do código de save ou a tabela de upgrades para fazer balanceamento.
+
+> A solução usa uma dinâmica arcade modular, apropriada à pista atual, em vez de introduzir um rigid-body completo que poderia aumentar o pacote, exigir colliders novos e alterar colisões já aprovadas. O arquivo é local, entra no app shell offline e é copiado para o APK.
 
 ## Como os jogadores recebem uma atualização
 
@@ -57,22 +66,22 @@ Depois de alterar o jogo, edite `version.json`. Aumente o campo `version`, escol
 
 ```json
 {
-  "version": "4.0.0",
+  "version": "4.1.0",
   "name": "Drifin Slot",
-  "title": "Câmera interna e visual renovado",
-  "message": "Nova visão dentro do carro, carros mais detalhados, cenário mais vivo e direção refinada.",
-  "releaseNotes": ["Câmera interna e cockpit", "Carros PBR e showroom renovado", "Clima, cenário e drift com áudio"],
-  "cacheName": "drifin-slot-v5",
+  "title": "Física modular e menus mobile renovados",
+  "message": "Veículos com perfis de direção atualizáveis, suspensão visual e menus mais rápidos no celular.",
+  "releaseNotes": ["Motor modular de veículos", "Menus mobile e garagem renovados", "Service worker v6 e APK sincronizado"],
+  "cacheName": "drifin-slot-v6",
   "changeSize": "média",
   "releasedAt": "2026-08-19"
 }
 ```
 
-O `cacheName` do exemplo deve ser o mesmo valor usado na primeira linha de `sw.js`. Para a versão seguinte, altere também `CACHE_NAME` para `drifin-slot-v6`. Depois, envie tudo:
+O `cacheName` do exemplo deve ser o mesmo valor usado na primeira linha de `sw.js`. Para cada nova release, avance os dois valores juntos — por exemplo, `4.2.0` com `drifin-slot-v7` — e inclua `vehicle-engine.js` se ele continuar sendo usado. Depois, envie tudo:
 
 ```bash
 git add .
-git commit -m "Release Drifin Slot 4.0.0 visual modernization"
+git commit -m "Release Drifin Slot 4.1.0 vehicle engine and mobile menus"
 git push origin main
 ```
 

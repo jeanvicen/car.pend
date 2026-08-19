@@ -9,7 +9,7 @@ const webDir = resolve(apkRoot, 'www');
 rmSync(webDir, { recursive: true, force: true });
 mkdirSync(webDir, { recursive: true });
 
-for (const file of ['index.html', 'manifest.webmanifest', 'version.json', 'sw.js']) {
+for (const file of ['index.html', 'manifest.webmanifest', 'version.json', 'sw.js', 'vehicle-engine.js']) {
   cpSync(resolve(repoRoot, file), resolve(webDir, file));
 }
 for (const dir of ['icons', 'vendor']) {

@@ -1,10 +1,11 @@
-const CACHE_NAME = 'drifin-slot-v5';
+const CACHE_NAME = 'drifin-slot-v6';
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.webmanifest',
   './version.json',
   './vendor/three.min.js',
+  './vehicle-engine.js',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/apple-touch-icon.png',
