@@ -49,3 +49,7 @@ A corrida continuou iniciando e a contagem `2` apareceu após o gesto. A funçã
 ## Matriz headless de telas
 
 Foram geradas capturas em 1280×720, 1920×1080, 812×375 e 375×812. O Chromium headless usado nessa etapa não habilitou WebGL, portanto as imagens exibiram corretamente a estrutura do menu e os controles, mas também mostraram o fallback `Falha ao iniciar o motor 3D`. Esse fallback é esperado nessa modalidade sem aceleração WebGL; a validação interativa no navegador de sandbox já confirmou o canvas 3D, a corrida e a garagem funcionando.
+
+## Deploy público
+
+Após o push do commit `564b6b4`, `https://car-pend.vercel.app/` passou a servir o título `Drifin Slot · Neon Drift`, o menu redesenhado, a nova logo no aviso de instalação e o perfil `QUALIDADE ALTO`. A corrida pública iniciou com a contagem regressiva `2`, confirmando que a Vercel entregou a versão modernizada sem quebrar o loop principal.
