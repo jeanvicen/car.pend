@@ -255,3 +255,19 @@ A navegação pública 4.2.0 pós-corrida passou: `Início` retornou ao menu com
 ## Matriz visual headless 4.2.0
 
 As capturas locais em `640×360` e `1604×720` mantiveram logo, painel de controles, cartão do Chama, botões `Ligar o Motor`/`Garagem`, HUD e aviso de instalação dentro da viewport, sem corte. O Chromium headless exibiu o fallback `Falha ao iniciar o motor 3D` por não fornecer WebGL nessa modalidade; a validação 3D confiável foi feita no navegador interativo local e no deploy público, onde canvas, corrida, cockpit e showroom renderizaram normalmente.
+
+## Investigação do bug da estrada — reprodução inicial
+
+No preview local 4.2.0, a corrida iniciou normalmente e a pista ficou visível a `0,03 km`, `0,10 km`, `0,15 km`, `0,20 km` e `0,55 km`. A sessão terminou por `Batida!` em `0,57 km`; a estrada ainda estava visível atrás do overlay de game over. O desaparecimento reportado pelo usuário não foi reproduzido nesse primeiro trecho, portanto a investigação continua sobre atualização de ribbons, transições de clima/relevo, descarte de objetos e uma execução mais longa sem colisão.
+
+## Diagnóstico intermediário do bug da estrada
+
+O preview 4182 estava controlado por cache antigo; um servidor fresco em 4183 recebeu o HTML atual e confirmou `__drifinRoadDebug` no DOM. Entretanto, a função não ficou disponível em `window` apesar de o console não mostrar exceções, indicando escopo isolado do bloco principal. A sonda temporária será removida/substituída por uma correção estrutural independente de debug global.
+
+## Hotfix 4.2.1 — estrada coberta pelo terreno e validação longa
+
+A investigação do desaparecimento da estrada identificou dois fatores complementares. O plano de terreno ficava praticamente na mesma altura vertical da estrada (`y≈-0.05`), enquanto `roadSample()` introduz descidas e ondulações; em determinados trechos, o terreno podia ser desenhado por cima das ribbons e mascarar o asfalto. Além disso, a versão anterior tinha ribbons mais curtas e névoa de chuva excessivamente próxima, o que reduzia a margem visual. O hotfix mantém `THREE.DoubleSide`, ribbons de `fromZ=24` a `toZ=-420` com mais segmentos, `frustumCulled=false`, recálculo de bounding sphere e névoa de chuva em `fog.far=240→185`, e baixa os planos `groundMesh`/`sideGround` para `y=-1.15`, abaixo de toda a ondulação da pista.
+
+No preview local `http://127.0.0.1:4183/?hotfix=ground-depth-2`, a corrida foi validada visualmente em 0,08, 0,23, 0,43, 0,62, 0,78, 0,98, 1,07, 1,17, 1,34, 1,60, 1,82 e 2,05 km. A pista, faixas, acostamentos, tráfego, pickups, iluminação e transições Litoral → Deserto permaneceram visíveis; em 1,60–1,82 km a estrada continuou presente sob chuva/partículas e neblina. O modo `window.__drifinNoCollision` foi usado apenas durante o diagnóstico e removido do código antes da publicação.
+
+A release web passa a ser `4.2.1`, com `drifin-slot-v8` e `changeSize=pequena`. O Android passa a `versionCode=5` e `versionName=4.2.1`, mantendo `applicationId=com.klipzastudio.sunsetrush`. A corrida, colisões, progressão, save, upgrades, conquistas, PWA, áudio, pausa, garagem, nitro e controles existentes foram preservados.

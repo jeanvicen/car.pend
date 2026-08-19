@@ -1,18 +1,16 @@
 {
-  "version": "4.2.0",
+  "version": "4.2.1",
   "name": "Drifin Slot",
-  "title": "Estrada viva, cockpit animado e clima adaptativo",
-  "message": "Carros com silhuetas próprias, cockpit em primeira pessoa com volante e mãos, estrada com curvas/subidas/lombadas e otimização visual para cada aparelho.",
+  "title": "Hotfix de visibilidade da estrada",
+  "message": "A estrada agora permanece visível em curvas, subidas, chuva e transições de bioma.",
   "releaseNotes": [
-    "Estrada procedural segmentada com curvas suaves, subidas e lombadas leves; carro, tráfego, props, pickups e câmera seguem o mesmo relevo.",
-    "Cockpit em primeira pessoa com volante, raios, mãos e antebraços animados pela direção real, além de roll/pitch/yaw ligados à pista.",
-    "Cinco assinaturas visuais de carro — hatch, coupe, blindado, GT e Phantom — reutilizadas no jogador, tráfego e showroom 3D.",
-    "Clima ampliado com chuva, reflexos e neve no bioma Montanhas Nevadas, usando partículas com densidade adaptativa por dispositivo.",
-    "Guardrails e balizadores refletivos estruturam as laterais dos biomas sem baixar assets pesados nem duplicar loops de renderização.",
-    "Qualidade adaptativa preservada: menos props, partículas e partículas de impacto no Econômico/Mobile; PBR e acabamento completo no Alto.",
-    "Corrida, upgrades, conquistas, save, PWA, áudio, nitro, pausa, garagem e progressão preservados; cache avançado para drifin-slot-v7."
+    "Corrigida a visibilidade da estrada quando o relevo passa por descidas e ondulações, evitando que o terreno cubra o asfalto.",
+    "Ribbons da estrada ampliados e atualizados com limites de geometria recalculados para reduzir cortes no horizonte.",
+    "Névoa de chuva ajustada para preservar a leitura do asfalto e das faixas em distância longa.",
+    "Colisões, corrida, upgrades, conquistas, save, PWA, áudio, nitro, pausa, garagem e progressão preservados.",
+    "Cache atualizado para drifin-slot-v8 como hotfix pequeno e rápido de instalar."
   ],
-  "cacheName": "drifin-slot-v7",
-  "changeSize": "grande",
+  "cacheName": "drifin-slot-v8",
+  "changeSize": "pequena",
   "releasedAt": "2026-08-19"
 }

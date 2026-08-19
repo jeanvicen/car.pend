@@ -454,7 +454,7 @@ const groundMat=new THREE.MeshStandardMaterial({color:0xcfa872,roughness:1,map:g
 const seaMat=new THREE.MeshPhongMaterial({color:0x2e7d9c,shininess:140,specular:0xaaccdd,polygonOffset:true,polygonOffsetFactor:1,polygonOffsetUnits:1});
 const cloudMat=new THREE.MeshStandardMaterial({color:0xffd9b8,roughness:1,flatShading:true});
 const mountMat=new THREE.MeshStandardMaterial({color:0x584a6e,roughness:1,flatShading:true});
-const roadMat=M.asphalt;
+const roadMat=M.asphalt;roadMat.side=THREE.DoubleSide;M.wetAsphalt.side=THREE.DoubleSide;
 function box(g,m,w,h,d,x,y,z,rx,ry,rz,sh){const o=new THREE.Mesh(GEO.box,m);o.scale.set(w,h,d);o.position.set(x,y,z);if(rx)o.rotation.x=rx;if(ry)o.rotation.y=ry;if(rz)o.rotation.z=rz;if(sh!==false)o.castShadow=true;g.add(o);return o;}
 function rbox(g,m,w,h,d,x,y,z,rx,ry,rz,sh){const geo=rBox(w,h,d,Math.min(w,h,d)*0.15);const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);if(rx)o.rotation.x=rx;if(ry)o.rotation.y=ry;if(rz)o.rotation.z=rz;if(sh!==false)o.castShadow=true;g.add(o);return o;}
 function cyl(g,m,rt,rb,h,x,y,z,sg,sh){const o=new THREE.Mesh(GEO.cyl,m);o.scale.set(rb,h,rt);o.position.set(x,y,z);if(sh!==false)o.castShadow=true;g.add(o);return o;}
@@ -485,20 +485,20 @@ scene.add(new THREE.AmbientLight(0x26304a,.5));const fill=new THREE.DirectionalL
 const dir=new THREE.DirectionalLight(0xffd7a3,DEVICE_PROFILE.low?.85:1.15);dir.castShadow=DEVICE_PROFILE.shadows;const shadowSize=DEVICE_PROFILE.shadowSize;dir.shadow.mapSize.set(shadowSize,shadowSize);
 dir.shadow.camera.left=-30;dir.shadow.camera.right=30;dir.shadow.camera.top=26;dir.shadow.camera.bottom=-46;
 dir.shadow.camera.near=10;dir.shadow.camera.far=190;dir.shadow.bias=-.0006;scene.add(dir);scene.add(dir.target);
-const groundMesh=plane(scene,groundMat,460,900,-220,-0.05,0);scene.fog.far=DEVICE_PROFILE.low?160:DEVICE_PROFILE.mobile?210:240;
+const groundMesh=plane(scene,groundMat,460,900,-220,-1.15,0);scene.fog.far=DEVICE_PROFILE.low?160:DEVICE_PROFILE.mobile?210:240;
 groundMesh.receiveShadow=true;groundMesh.renderOrder=0;
 const seaGeo=new THREE.PlaneGeometry(460,900,20,20);
 const sea=new THREE.Mesh(seaGeo,seaMat);sea.rotation.x=-Math.PI/2;sea.position.set(240,-1.05,-150);sea.renderOrder=1;scene.add(sea);
 const seaShimmer=new THREE.Mesh(new THREE.PlaneGeometry(440,700),new THREE.MeshBasicMaterial({map:shimmerTex,transparent:true,opacity:.1,blending:THREE.AdditiveBlending,depthWrite:false}));seaShimmer.rotation.x=-Math.PI/2;seaShimmer.position.set(240,-1.03,-140);seaShimmer.renderOrder=2;scene.add(seaShimmer);
 const foamMat=new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.25,depthWrite:false});
 const foam=plane(scene,foamMat,2.5,900,10.5,-0.01,-150);foam.renderOrder=3;
-const sideGround=plane(scene,groundMat,460,900,240,-0.045,0);sideGround.receiveShadow=true;sideGround.renderOrder=0;sideGround.visible=false;
+const sideGround=plane(scene,groundMat,460,900,240,-1.15,0);sideGround.receiveShadow=true;sideGround.renderOrder=0;sideGround.visible=false;
 const seaReflect=glow(0xffdf9e,30,0);seaReflect.position.set(100,0.1,-200);seaReflect.scale.set(15,80,1);seaReflect.renderOrder=4;seaReflect.visible=false;scene.add(seaReflect);
 let roadDistanceBase=0,roadNormalTick=0;const roadRibbons=[];
 function roadSample(z){const d=roadDistanceBase-z,u=d*.006;const x=Math.sin(u*.55)*1.65+Math.sin(u*1.22+1.2)*.42;const dx=(Math.cos(u*.55)*.55*1.65+Math.cos(u*1.22+1.2)*1.22*.42)*.006;const rise=Math.sin(u*.48+.7)*.42+Math.sin(u*1.42+2.1)*.12;const bump=Math.pow(Math.max(0,Math.sin(u*1.05-1.1)),18)*.34;const y=rise+bump;const slope=(Math.cos(u*.48+.7)*.48*.42+Math.cos(u*1.42+2.1)*1.42*.12)*.006;return{x,y:y+slope*z*.02,yaw:Math.atan(dx),slope};}
 function roadPoint(x,z){const q=roadSample(z);return{x:x+q.x,y:q.y,yaw:q.yaw,slope:q.slope};}
-function makeRoadRibbon(width,offset,material,y,order){const segments=DEVICE_PROFILE.low?46:DEVICE_PROFILE.mobile?62:82,fromZ=16,toZ=-300;const pos=new Float32Array((segments+1)*2*3),idx=[];for(let i=0;i<segments;i++){const a=i*2;idx.push(a,a+1,a+2,a+1,a+3,a+2);}const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(pos,3));geo.setIndex(idx);geo.computeVertexNormals();const mesh=new THREE.Mesh(geo,material);mesh.receiveShadow=DEVICE_PROFILE.shadows;mesh.renderOrder=order;mesh.frustumCulled=false;scene.add(mesh);const ribbon={mesh,geo,width,offset,y,segments,fromZ,toZ};roadRibbons.push(ribbon);return mesh;}
-function updateRoadRibbons(){roadNormalTick++;for(const r of roadRibbons){const a=r.geo.attributes.position.array;for(let i=0;i<=r.segments;i++){const z=lerp(r.fromZ,r.toZ,i/r.segments),q=roadSample(z);for(const side of[-1,1]){const k=(i*2+(side>0?1:0))*3;a[k]=q.x+r.offset+side*r.width*.5;a[k+1]=q.y+r.y;a[k+2]=z;}}r.geo.attributes.position.needsUpdate=true;if(roadNormalTick%3===0)r.geo.computeVertexNormals();}}
+function makeRoadRibbon(width,offset,material,y,order){const segments=DEVICE_PROFILE.low?52:DEVICE_PROFILE.mobile?72:96,fromZ=24,toZ=-420;const pos=new Float32Array((segments+1)*2*3),idx=[];for(let i=0;i<segments;i++){const a=i*2;idx.push(a,a+1,a+2,a+1,a+3,a+2);}const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(pos,3));geo.setIndex(idx);geo.computeVertexNormals();const mesh=new THREE.Mesh(geo,material);mesh.receiveShadow=DEVICE_PROFILE.shadows;mesh.renderOrder=order;mesh.frustumCulled=false;scene.add(mesh);const ribbon={mesh,geo,width,offset,y,segments,fromZ,toZ};roadRibbons.push(ribbon);return mesh;}
+function updateRoadRibbons(){roadNormalTick++;for(const r of roadRibbons){const a=r.geo.attributes.position.array;for(let i=0;i<=r.segments;i++){const z=lerp(r.fromZ,r.toZ,i/r.segments),q=roadSample(z);for(const side of[-1,1]){const k=(i*2+(side>0?1:0))*3;a[k]=q.x+r.offset+side*r.width*.5;a[k+1]=q.y+r.y;a[k+2]=z;}}r.geo.attributes.position.needsUpdate=true;if(roadNormalTick%3===0){r.geo.computeVertexNormals();r.geo.computeBoundingSphere();}r.mesh.visible=true;r.mesh.frustumCulled=false;}}
 const roadMesh=makeRoadRibbon(13.6,0,roadMat,0,10);
 makeRoadRibbon(2.6,-8.1,M.gravel,.01,11);makeRoadRibbon(2.6,8.1,M.gravel,.01,11);
 makeRoadRibbon(.18,-6.5,new THREE.MeshBasicMaterial({color:0xf5f1e2}),.03,12);makeRoadRibbon(.18,6.5,new THREE.MeshBasicMaterial({color:0xf5f1e2}),.03,12);
@@ -961,7 +961,7 @@ if(isWet&&roadMesh.material!==M.wetAsphalt){roadMesh.material=M.wetAsphalt;}
 else if(!isWet&&roadMesh.material!==M.asphalt){roadMesh.material=M.asphalt;}
 rain.visible=rainF>.1;splashes.visible=rainF>.1;rainMat.opacity=rainF*.7;
 $('rainfx').classList.toggle('on',rainF>.3);
-scene.fog.near=lerp(34,15,rainF);scene.fog.far=lerp(225,105,rainF);}
+scene.fog.near=lerp(34,20,rainF);scene.fog.far=lerp(240,185,rainF);}
 let AC=null,master,eng=null,nit=null,skid=null;
 function initAudio(){if(AC)return;try{AC=new(window.AudioContext||window.webkitAudioContext)();
 master=AC.createGain();master.gain.value=muted?0:.5;master.connect(AC.destination);

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'drifin-slot-v7';
+const CACHE_NAME = 'drifin-slot-v8';
 const APP_SHELL = [
   './',
   './index.html',
