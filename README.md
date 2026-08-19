@@ -1,29 +1,43 @@
 # Drifin Slot
 
-Drifin Slot é um jogo de corrida arcade 3D em paisagem, ambientado na Rota 66 e redesenhado para celular e PC. A modernização preserva a base de corrida, carros, upgrades, conquistas, biomas, pontuação, controles por toque, teclado e sistema de save, enquanto melhora identidade visual, apresentação dos veículos, garagem, desempenho, iluminação, animações, áudio e resposta de drift.
+Drifin Slot é um jogo de corrida arcade 3D em paisagem, ambientado na Rota 66 e preparado para celular e PC. A base de corrida, carros, upgrades, conquistas, biomas, pontuação, controles por toque, teclado e sistema de save continuam preservados.
 
-## O que foi modernizado
+## Modernização
 
-A nova direção visual usa painéis glass, ciano, violeta, âmbar e azul profundo, com uma interface mais legível em telas pequenas. O menu agora usa a marca Drifin Slot, os ícones foram substituídos pela logo neon do carro e os cards da garagem ganharam uma apresentação mais rica. A aba de carros possui um **showroom 3D** que reutiliza os mesmos meshes procedurais da pista e acompanha a seleção atual.
+A interface usa painéis glass, ciano, violeta, âmbar e azul profundo, com leitura melhor em telas pequenas. A garagem ganhou showroom 3D, os carros receberam acabamento procedural mais rico e o renderer escolhe automaticamente os perfis **Econômico**, **Mobile** ou **Alto**. A simulação lateral foi refinada para aderência, freio e chuva, enquanto áudio, iluminação, efeitos de pista e animações receberam melhorias graduais.
 
-O renderer passou a escolher automaticamente um perfil **Econômico**, **Mobile** ou **Alto**, limitando pixel ratio, antialiasing e sombras de acordo com o aparelho. A simulação ganhou uma resposta lateral mais natural para aderência normal, freio e chuva. Também foi removido o cálculo de normais da água quando o mar não está visível na pista, evitando trabalho desnecessário por frame em celulares.
+A **foto anterior do carro com o pôr do sol laranja** foi restaurada como logo do PWA, favicon, ícone do iPhone e launcher Android. O nome visível continua sendo **Drifin Slot**.
 
 | Arquivo | Função |
 | --- | --- |
-| `index.html` | Jogo, interface Drifin Slot, renderer adaptativo, showroom e lógica original de corrida. |
-| `manifest.webmanifest` | Nome, logo, cores, orientação e modo instalável. |
-| `sw.js` | Cache do aplicativo e atualização do pacote `drifin-slot-v1`. |
+| `index.html` | Jogo, interface, showroom, controles e sistema de atualização. |
+| `manifest.webmanifest` | Nome, logo, cores, orientação e instalação PWA. |
+| `version.json` | Versão publicada, descrição da atualização e estimativa de tamanho. |
+| `sw.js` | Cache do aplicativo, atualização segura e limpeza de versões antigas. |
 | `vendor/three.min.js` | Cópia local do Three.js. |
-| `icons/` | Logo Drifin Slot para PWA, navegador, iPhone e Android. |
-| `assets/` | Referência visual e originais de direção de arte. |
+| `icons/` | Foto anterior nos tamanhos PWA, navegador, iPhone e Android. |
+| `assets/` | Logo restaurada e referências visuais. |
 | `apk/` | Projeto Capacitor para gerar APK/AAB Android. |
-| `PLAN.md`, `STRUCTURE.md`, `MEMORY.md`, `ASSETS.md` | Plano, arquitetura, decisões e inventário de assets da modernização. |
 
-## Instalar no celular
+## Instalação no celular
 
 Abra [`https://car-pend.vercel.app`](https://car-pend.vercel.app) no navegador do celular. No Android, use o aviso **Instalar Drifin Slot** ou o menu do Chrome e escolha **Instalar aplicativo**. No iPhone, abra pelo Safari, toque em **Compartilhar** e escolha **Adicionar à Tela de Início**. O jogo foi preparado para abrir em paisagem.
 
-## Atualizar para todos os jogadores
+## Como os jogadores recebem uma atualização
+
+O fluxo de atualização já está no jogo. Quando uma pessoa que já possui save abrir uma versão nova, o jogo consulta `version.json` sem cache e mostra:
+
+> **Nova atualização e melhorias** — deseja instalar?
+
+Ao tocar em **Atualizar**, o navegador baixa o novo service worker, mostra o estado do download, aplica a versão nova somente depois que ela está pronta, preserva o save e recarrega o jogo. Depois da recarga aparece uma confirmação no próprio jogo:
+
+> **DRIFIN SLOT — Foi atualizado para a versão X.**
+
+Se a pessoa fechar o jogo enquanto o navegador ainda estiver baixando, o service worker pode continuar o trabalho em segundo plano conforme as regras do sistema operacional. Se o celular suspender o processo, nada é perdido: na próxima abertura o jogo consulta a versão novamente e retoma o aviso ou conclui a atualização. Uma atualização PWA não pode obrigar o sistema do celular a manter um download ativo quando o usuário encerra completamente o navegador; por isso a próxima abertura funciona como recuperação segura.
+
+O texto informa a estimativa de tamanho definida em `version.json`: `pequena` explica que o download costuma ser rápido, `média` informa que pode levar alguns segundos e `grande` avisa que a alteração pode demorar mais. Isso descreve a expectativa de atualização sem fingir uma porcentagem de download que o service worker não fornece diretamente.
+
+## Como publicar uma nova versão para todos
 
 O ponto correto para enviar alterações é este repositório GitHub, na branch `main`:
 
@@ -31,19 +45,38 @@ O ponto correto para enviar alterações é este repositório GitHub, na branch 
 https://github.com/jeanvicen/car.pend
 ```
 
-O fluxo local é:
+Depois de alterar o jogo, edite `version.json`. Aumente o campo `version`, escolha `changeSize` e descreva as melhorias:
+
+```json
+{
+  "version": "2.2.0",
+  "name": "Drifin Slot",
+  "title": "Nova atualização e melhorias",
+  "message": "Novos ajustes de desempenho e conteúdo.",
+  "releaseNotes": ["Melhorias na pista", "Correções de controles"],
+  "cacheName": "drifin-slot-v3",
+  "changeSize": "média",
+  "releasedAt": "2026-08-18"
+}
+```
+
+O `cacheName` do exemplo deve ser o mesmo valor usado na primeira linha de `sw.js`. Para a versão seguinte, altere também `CACHE_NAME` para `drifin-slot-v3`. Depois, envie tudo:
 
 ```bash
 git add .
-git commit -m "Descreva a alteração"
+git commit -m "Release Drifin Slot 2.2.0"
 git push origin main
 ```
 
-O site atual está associado à Vercel e continua usando [`https://car-pend.vercel.app`](https://car-pend.vercel.app). O deploy ocorre após o envio para `main`. Para alterações do jogo, não remova os IDs dos controles, as chaves de `localStorage` nem o formato do save. Ao mudar arquivos do app, incremente `CACHE_NAME` em `sw.js`, por exemplo para `drifin-slot-v2`, para renovar o cache nos aparelhos.
+A Vercel publica automaticamente o mesmo endereço [`https://car-pend.vercel.app`](https://car-pend.vercel.app). Os jogadores não precisam receber outro link nem reinstalar o PWA. Ao abrir o jogo novamente, a versão nova será detectada e o aviso aparecerá para quem já tinha progresso salvo.
+
+Não remova `version.json`, `manifest.webmanifest`, `sw.js`, os IDs dos controles, as chaves de `localStorage` ou o formato do save. O save fica separado do cache, portanto atualizar os arquivos não deve apagar o progresso.
 
 ## APK Android
 
-A pasta [`apk/`](./apk/) contém a embalagem Capacitor. O `applicationId` Android permanece `com.klipzastudio.sunsetrush` para permitir continuidade das instalações já existentes, mas o nome visível do aplicativo é **Drifin Slot**. Para gerar um APK de teste, use um computador com Node.js, Java, Android Studio e Android SDK:
+A pasta [`apk/`](./apk/) contém a embalagem Capacitor. O `applicationId` Android permanece `com.klipzastudio.sunsetrush` para permitir continuidade das instalações existentes, enquanto o nome visível é **Drifin Slot**. A atualização automática descrita acima vale para o PWA instalado pelo navegador. Um APK instalado como aplicativo nativo recebe novas versões por Google Play ou por um novo APK assinado; ele não pode substituir sozinho o próprio pacote nativo sem passar pelo mecanismo oficial do Android.
+
+Para gerar o APK de teste:
 
 ```bash
 cd apk
@@ -52,14 +85,24 @@ npm run sync
 npm run build-debug
 ```
 
-O APK fica em `apk/android/app/build/outputs/apk/debug/app-debug.apk`. Para publicação na Google Play, configure uma chave de assinatura privada e gere o bundle release com `npm run build-release`. Senhas e chaves de assinatura nunca devem entrar no GitHub.
+Para uma publicação Android, aumente `versionCode` e `versionName` em `apk/android/app/build.gradle`, gere o bundle e assine com uma chave privada que nunca deve entrar no GitHub:
+
+```bash
+cd apk
+npm run sync
+npm run build-release
+```
+
+O APK de teste fica em `apk/android/app/build/outputs/apk/debug/app-debug.apk`. O bundle de loja fica em `apk/android/app/build/outputs/bundle/release/app-release.aab`.
 
 ## Teste local
 
-Como o service worker exige um contexto seguro, teste usando um servidor HTTP local:
+Como o service worker exige HTTP ou HTTPS, teste com um servidor local:
 
 ```bash
 python3 -m http.server 4173
 ```
 
-Depois, abra `http://localhost:4173` no navegador. A tag `drifin-slot-baseline-3f3c485` aponta para a versão funcional anterior caso seja necessário comparar ou reverter.
+Depois, abra `http://localhost:4173`. Para simular uma nova atualização, altere `version.json`, aumente `CACHE_NAME` em `sw.js`, recarregue o site mantendo um `sr_save` existente e confirme que o aviso aparece.
+
+A tag `drifin-slot-baseline-3f3c485` aponta para a versão funcional anterior caso seja necessário comparar ou reverter.

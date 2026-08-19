@@ -1,0 +1,14 @@
+{
+  "version": "2.1.0",
+  "name": "Drifin Slot",
+  "title": "Nova atualização e melhorias",
+  "message": "Uma nova versão do Drifin Slot está pronta.",
+  "releaseNotes": [
+    "Foto anterior restaurada nos ícones do jogo.",
+    "Atualização segura com preservação do save.",
+    "Aviso de conclusão após a troca da versão."
+  ],
+  "cacheName": "drifin-slot-v2",
+  "changeSize": "pequena",
+  "releasedAt": "2026-08-18"
+}

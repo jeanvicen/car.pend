@@ -53,3 +53,23 @@ Foram geradas capturas em 1280×720, 1920×1080, 812×375 e 375×812. O Chromium
 ## Deploy público
 
 Após o push do commit `564b6b4`, `https://car-pend.vercel.app/` passou a servir o título `Drifin Slot · Neon Drift`, o menu redesenhado, a nova logo no aviso de instalação e o perfil `QUALIDADE ALTO`. A corrida pública iniciou com a contagem regressiva `2`, confirmando que a Vercel entregou a versão modernizada sem quebrar o loop principal.
+
+## Correção mobile em prévia limpa
+
+Na prévia em `localhost:4177`, a corrida abriu sem erro, o canvas ocupou a viewport reportada de 1280×1100 e o indicador mostrou `QUALIDADE ALTO`. A imagem interativa mostrou céu, montanhas, placas, pista, carro e HUD renderizados com contraste melhor; um comando ArrowLeft respondeu durante a corrida, com score, distância e velocidade atualizando.
+
+## Game over mobile corrigido
+
+Foi simulado um fim de corrida com pontuação `17143`, ganhos, três conquistas, distância, moedas, combo, raspadas, recorde e trecho. Na viewport móvel corrigida, o painel ficou centralizado e compacto, sem corte; todos os dados aparecem e os botões `Jogar de novo` e `Início` permanecem acessíveis.
+
+## Retomada da corrida após game over
+
+O botão `Início` retornou corretamente ao menu; em seguida `Ligar o Motor` iniciou outra corrida. O menu coube na viewport, mostrou `QUALIDADE ALTO`, e a nova largada exibiu cenário, pista, carro e HUD sem corte.
+
+## Desempenho e fallback
+
+A medição interativa de 1,5 s na prévia foi influenciada pelo ambiente de navegador da sandbox e registrou poucos frames; a verificação posterior mostrou que o ajuste adaptativo reduziu o buffer efetivo do canvas para escala 1×, preservando o indicador `QUALIDADE ALTO`. O código mantém sombras desligadas no perfil mobile, DPR adaptativo e atualização gradual, além de densidades menores de decoração, postes e tráfego.
+
+## Garagem e showroom após correção mobile
+
+Após uma corrida encerrada, `Início` voltou ao menu preservando recorde e moedas. `Garagem` abriu normalmente; a aba `Carros` mostrou o `3D SHOWROOM`, preview renderizado do Chama, cinco cards (Chama, Brisa, Coruja, Rino e Fantasma), preços e estados de compra. O painel ficou dentro da tela e a área interna permaneceu rolável, sem corte.

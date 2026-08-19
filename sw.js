@@ -1,8 +1,9 @@
-const CACHE_NAME = 'drifin-slot-v1';
+const CACHE_NAME = 'drifin-slot-v2';
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.webmanifest',
+  './version.json',
   './vendor/three.min.js',
   './icons/icon-192.png',
   './icons/icon-512.png',
@@ -14,7 +15,7 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(APP_SHELL))
-      .then(() => self.skipWaiting())
+      .then(() => { if (!self.registration.active) return self.skipWaiting(); })
   );
 });
 
@@ -30,9 +31,21 @@ self.addEventListener('activate', event => {
   );
 });
 
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
+});
+
 self.addEventListener('fetch', event => {
   const request = event.request;
   if (request.method !== 'GET') return;
+
+  if (new URL(request.url).pathname.endsWith('/version.json')) {
+    event.respondWith(
+      fetch(new Request(request, { cache: 'no-store' }))
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
 
   if (request.mode === 'navigate') {
     event.respondWith(
