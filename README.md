@@ -4,7 +4,7 @@ Drifin Slot é um jogo de corrida arcade 3D em paisagem, ambientado na Rota 66 e
 
 ## Modernização
 
-A interface usa painéis glass, ciano, violeta, âmbar e azul profundo, com leitura melhor em telas pequenas. A garagem ganhou showroom 3D, os carros receberam acabamento procedural mais rico e o renderer escolhe automaticamente os perfis **Econômico**, **Mobile** ou **Alto**. A simulação lateral foi refinada para aderência, freio e chuva, enquanto áudio, iluminação, efeitos de pista e animações receberam melhorias graduais.
+A interface usa painéis glass, ciano, violeta, âmbar e azul profundo, com leitura melhor em telas pequenas. A garagem ganhou showroom 3D, os carros receberam acabamento procedural mais rico e silhuetas próprias, e o renderer escolhe automaticamente os perfis **Econômico**, **Mobile** ou **Alto**. A simulação lateral foi refinada para aderência, freio, chuva e relevo; a estrada agora tem curvas suaves, subidas e lombadas leves, enquanto áudio, iluminação, neve, reflexos e animações recebem densidade adaptativa.
 
 A **foto anterior do carro com o pôr do sol laranja** foi restaurada como logo do PWA, favicon, ícone do iPhone e launcher Android. O nome visível continua sendo **Drifin Slot**.
 
@@ -28,13 +28,13 @@ Abra [`https://car-pend.vercel.app`](https://car-pend.vercel.app) no navegador d
 
 ## Câmeras e modernização visual
 
-Durante a corrida, use o botão `◌` no HUD ou pressione `C`/`V` para alternar entre a câmera externa de perseguição e a **visão interna do carro**. O cockpit mostra painel, volante, display emissivo e para-brisa translúcido; a carroceria externa, rodas e efeitos inferiores são ocultados nessa visão para manter a pista livre e a leitura correta em telas pequenas.
+Durante a corrida, use o botão `◌` no HUD ou pressione `C`/`V` para alternar entre a câmera externa de perseguição e a **visão interna do carro**. O cockpit mostra painel, volante com raios, mãos, antebraços, display emissivo e para-brisa translúcido. O volante gira com a direção real; a carroceria externa, rodas e efeitos inferiores são ocultados nessa visão para manter a pista livre e a leitura correta em telas pequenas. A câmera acompanha o yaw, a inclinação da estrada, o roll de curva, a aceleração, a frenagem e os saltos.
 
-A modernização 4.0.0 mantém o Three.js local como base de renderização, em vez de migrar todo o jogo para Babylon.js. Essa decisão preserva a compatibilidade offline, os pools de objetos, o PWA, o APK, a física e o save; os ganhos vêm de materiais físicos leves, ambiente refletivo, carros com rodas detalhadas, marcos refletivos, clima, transferência de peso visual e áudio de pneus proporcional ao drift. A release 4.1.0 acrescenta uma camada de dinâmica local, sem dependências externas, para deixar os veículos fáceis de balancear e atualizar.
+A modernização mantém o Three.js local como base de renderização, em vez de migrar todo o jogo para Babylon.js. Essa decisão preserva a compatibilidade offline, os pools de objetos, o PWA, o APK, a física e o save; os ganhos vêm de materiais físicos leves, ambiente refletivo, carros com rodas detalhadas, marcos refletivos, clima, transferência de peso visual e áudio de pneus proporcional ao drift. A release 4.1.0 acrescentou a dinâmica local; a 4.2.0 amplia a mesma base com estrada de relevo, cockpit animado, silhuetas de veículos, guardrails, neve e otimização de partículas.
 
 ## Motor modular dos veículos
 
-O arquivo `vehicle-engine.js` concentra os perfis de direção dos cinco carros. Cada perfil possui multiplicador de velocidade, aceleração, desaceleração, força de direção, aderência seca/molhada, damping lateral, eficiência do nitro, escala de drift, resposta visual, transferência de peso e curso de suspensão. O `index.html` continua responsável pela progressão, colisões, pontuação e renderização; o módulo calcula a resposta do veículo e devolve valores para o loop.
+O arquivo `vehicle-engine.js` concentra os perfis de direção dos cinco carros. Cada perfil possui multiplicador de velocidade, aceleração, desaceleração, força de direção, aderência seca/molhada, damping lateral, eficiência do nitro, escala de drift, resposta visual, transferência de peso, curso de suspensão e parâmetros de curva como entre-eixos, largura, altura e aerodinâmica. O `index.html` continua responsável pela progressão, colisões, pontuação e renderização; o módulo calcula a resposta do veículo e devolve valores para o loop. A câmera, o volante e a pose da carroceria usam o slip angle, yaw rate e carga lateral calculados pelo mesmo estado.
 
 Para ajustar um carro, altere somente o objeto correspondente em `PROFILES` dentro de `vehicle-engine.js`. Os IDs são estáveis: `0` Chama, `1` Brisa, `2` Coruja, `3` Rino e `4` Fantasma. A garagem e o menu leem o mesmo perfil e mostram o rótulo de condução, evitando uma segunda fonte de verdade. Não é necessário alterar `sr_save`, o formato do código de save ou a tabela de upgrades para fazer balanceamento.
 
@@ -66,22 +66,22 @@ Depois de alterar o jogo, edite `version.json`. Aumente o campo `version`, escol
 
 ```json
 {
-  "version": "4.1.0",
+  "version": "4.2.0",
   "name": "Drifin Slot",
-  "title": "Física modular e menus mobile renovados",
-  "message": "Veículos com perfis de direção atualizáveis, suspensão visual e menus mais rápidos no celular.",
-  "releaseNotes": ["Motor modular de veículos", "Menus mobile e garagem renovados", "Service worker v6 e APK sincronizado"],
-  "cacheName": "drifin-slot-v6",
+  "title": "Estrada viva, cockpit animado e clima adaptativo",
+  "message": "Carros com silhuetas próprias, relevo de estrada, câmera interna animada e otimização por dispositivo.",
+  "releaseNotes": ["Estrada com curvas, subidas e lombadas", "Cockpit com volante, mãos e antebraços", "Clima de chuva/neve, guardrails e service worker v7"],
+  "cacheName": "drifin-slot-v7",
   "changeSize": "média",
   "releasedAt": "2026-08-19"
 }
 ```
 
-O `cacheName` do exemplo deve ser o mesmo valor usado na primeira linha de `sw.js`. Para cada nova release, avance os dois valores juntos — por exemplo, `4.2.0` com `drifin-slot-v7` — e inclua `vehicle-engine.js` se ele continuar sendo usado. Depois, envie tudo:
+O `cacheName` do exemplo deve ser o mesmo valor usado na primeira linha de `sw.js`. Para cada nova release, avance os dois valores juntos — por exemplo, `4.3.0` com `drifin-slot-v8` — e inclua `vehicle-engine.js` se ele continuar sendo usado. A estrada, cockpit e partículas de clima estão dentro do `index.html`, então não dependem de downloads externos. Depois, envie tudo:
 
 ```bash
 git add .
-git commit -m "Release Drifin Slot 4.1.0 vehicle engine and mobile menus"
+git commit -m "Release Drifin Slot 4.2.0 cockpit terrain climate"
 git push origin main
 ```
 

@@ -227,3 +227,17 @@ No deploy público, a câmera alternou para `◉ Visão interna` com a pista/hor
 Após a corrida pública, o retorno pelo botão Início reapresentou o menu e a Garagem abriu com `697` moedas, upgrades, `1/16` conquistas e progresso acumulado. O painel mobile permaneceu rolável, sem corte visível, com tabs e ações preservadas.
 
 A aba `Carros` pública exibiu showroom 3D e os cinco rótulos de perfil da 4.1.0. O botão `Voltar` fechou a garagem mesmo partindo dessa aba e reapresentou o menu com `1428` de recorde, `697` moedas e o cartão do Chama.
+
+## Evolução visual 4.2 — primeiro preview
+
+A estrada dinâmica renderizou no preview local em 4182 com curvas suaves, subidas/lombadas leves, faixas laterais e props acompanhando a inclinação. A largada continuou funcionando; após a contagem, score, distância e velocidade atualizaram, o carro permaneceu legível e o HUD/controles não foram deslocados. A validação visual ocorreu em quatro estados do navegador, incluindo menu, contagem 3/1 e corrida jogável.
+
+A câmera interna 4.2 foi validada no preview após reposicionar o rig: o volante apareceu em primeiro plano, com mãos/antebraços visíveis sobre o painel; o botão `btnCamera` exibiu `◉ Visão interna`. Durante a condução, ArrowLeft respondeu, a pista e o skyline deslocaram-se, e score `46`, distância `0,10 km` e velocidade `82 KM/H` atualizaram sem travamento.
+
+## Evolução visual 4.2 — garagem e showroom
+
+Após recarregar o preview, a garagem abriu normalmente. A aba `Carros` exibiu o showroom 3D e os cinco veículos com perfis `DRIFT BALANCEADO`, `DRIFT ÁGIL`, `DRIFT VELOCIDADE`, `DRIFT BLINDADO` e `DRIFT COMPLETO`; as silhuetas procedurais foram renderizadas sem erro visível. O console do navegador permaneceu sem saída de erro após menu, corrida, câmera e garagem.
+
+## Atualização local da release 4.2.0
+
+O preview exibiu o aviso `Estrada viva, cockpit animado e clima adaptativo`, marcou a alteração como `grande` e ofereceu `Atualizar`. Após o clique, o painel fechou e o menu principal permaneceu renderizando com canvas, carro, HUD, botões e cartão do veículo. A leitura direta de `localStorage` foi bloqueada pela sessão automatizada; esse diagnóstico foi descartado, sem afetar a validação visual e funcional.

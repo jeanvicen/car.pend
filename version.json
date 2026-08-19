@@ -1,16 +1,18 @@
 {
-  "version": "4.1.0",
+  "version": "4.2.0",
   "name": "Drifin Slot",
-  "title": "Física modular e menus mobile renovados",
-  "message": "Veículos com perfis de direção atualizáveis, suspensão visual e menus mais rápidos e confortáveis no celular.",
+  "title": "Estrada viva, cockpit animado e clima adaptativo",
+  "message": "Carros com silhuetas próprias, cockpit em primeira pessoa com volante e mãos, estrada com curvas/subidas/lombadas e otimização visual para cada aparelho.",
   "releaseNotes": [
-    "Novo módulo local Drifin Vehicle Engine, sem dependências, com aceleração, freio, aderência, drift, chuva e suspensão configuráveis por veículo.",
-    "Cada carro agora tem um perfil de condução visível na garagem e no menu, facilitando balanceamento e futuras atualizações sem mexer no save.",
-    "Menus mobile renovados com cartão do carro atual, alvos de toque maiores, tabs roláveis, painéis compactos e suporte seguro a paisagem curta e retrato de fallback.",
-    "Service worker atualizado para drifin-slot-v6; o módulo de física entra no app shell offline e também é copiado para o APK Capacitor.",
-    "Corrida, upgrades, conquistas, save, PWA, câmeras, controles, áudio e progressão preservados."
+    "Estrada procedural segmentada com curvas suaves, subidas e lombadas leves; carro, tráfego, props, pickups e câmera seguem o mesmo relevo.",
+    "Cockpit em primeira pessoa com volante, raios, mãos e antebraços animados pela direção real, além de roll/pitch/yaw ligados à pista.",
+    "Cinco assinaturas visuais de carro — hatch, coupe, blindado, GT e Phantom — reutilizadas no jogador, tráfego e showroom 3D.",
+    "Clima ampliado com chuva, reflexos e neve no bioma Montanhas Nevadas, usando partículas com densidade adaptativa por dispositivo.",
+    "Guardrails e balizadores refletivos estruturam as laterais dos biomas sem baixar assets pesados nem duplicar loops de renderização.",
+    "Qualidade adaptativa preservada: menos props, partículas e partículas de impacto no Econômico/Mobile; PBR e acabamento completo no Alto.",
+    "Corrida, upgrades, conquistas, save, PWA, áudio, nitro, pausa, garagem e progressão preservados; cache avançado para drifin-slot-v7."
   ],
-  "cacheName": "drifin-slot-v6",
-  "changeSize": "média",
+  "cacheName": "drifin-slot-v7",
+  "changeSize": "grande",
   "releasedAt": "2026-08-19"
 }
