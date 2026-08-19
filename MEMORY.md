@@ -103,3 +103,7 @@ O retorno pela seta `Voltar` levou ao menu principal sem corte. `Ligar o Motor` 
 ## Game over após correção da tela principal
 
 Foi simulado um fim de corrida com score, ganhos, conquistas, distância, moedas, combo, raspadas, recorde e trecho. O painel mostrou todos os dados, sem corte, e manteve `Jogar de novo` e `Início` acessíveis.
+
+## Deploy público da correção 3.2.0
+
+Após integrar os commits remotos de versão, a release foi publicada como `3.2.0` com `cacheName: drifin-slot-v3`. O endpoint público confirmou a versão e as release notes. A página principal pública carregou como `Drifin Slot · Neon Drift`, com menu, canvas e aviso `Correção mobile e melhorias` exibindo os botões `Atualizar` e `Depois`.
