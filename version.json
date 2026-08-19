@@ -1,14 +1,14 @@
 {
-  "version": "3.1.0",
+  "version": "3.2.0",
   "name": "Drifin Slot",
-  "title": "Nova atualização e melhorias",
-  "message": "Uma nova versão do Drifin Slot está pronta.",
+  "title": "Correção mobile e melhorias",
+  "message": "Interface principal corrigida para celulares, sem cortes e com melhor adaptação a diferentes telas.",
   "releaseNotes": [
-    "Foto anterior restaurada nos ícones do jogo.",
-    "Atualização segura com preservação do save.",
-    "Aviso de conclusão após a troca da versão."
+    "Tela principal ajustada para paisagem curta, ultrawide e safe areas do Android.",
+    "Modo compacto para aparelhos com pouca altura e prevenção de aumento automático de texto.",
+    "Menu, corrida e garagem preservados e validados em diferentes proporções."
   ],
-  "cacheName": "drifin-slot-v2",
+  "cacheName": "drifin-slot-v3",
   "changeSize": "pequena",
-  "releasedAt": "2026-08-18"
+  "releasedAt": "2026-08-19"
 }

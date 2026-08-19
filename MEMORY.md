@@ -77,3 +77,29 @@ Após uma corrida encerrada, `Início` voltou ao menu preservando recorde e moed
 ## Deploy público pós-commit
 
 O push `d45304e` foi publicado no GitHub. Em `https://car-pend.vercel.app/version.json`, a release `2.1.0`, `drifin-slot-v2`, `changeSize: pequena` e as release notes estão acessíveis. A página pública principal carregou como `Drifin Slot · Neon Drift`, mostrou a logo/identidade atual, o menu funcional, `QUALIDADE ALTO`, o aviso de atualização leve e os botões `Atualizar` e `Depois`.
+
+## Diagnóstico da tela principal em múltiplas proporções
+
+A captura do usuário representa uma viewport útil aproximada de 1604×658 após descontar a barra de status. A prévia corrigida em 1604×658 mostrou o logotipo, painel direito, botões, instruções e indicador de qualidade completos. Em 640×360, o modo compacto manteve os elementos inteiros e legíveis. Em 360×800, a interface paisagem foi rotacionada para ocupar o retrato inteiro; o conteúdo ficou completo, embora o usuário deva usar a rotação paisagem prevista pelo jogo.
+
+## Correção final da tela principal
+
+A causa do corte era a combinação de menu centralizado verticalmente, conteúdo alto em uma viewport curta após a barra de status e possível aumento automático de texto do Android/WebView. O menu passou a iniciar no topo quando necessário, aceitar rolagem vertical segura, respeitar safe areas, usar compactação abaixo de 560/400 px de altura e manter o modo de uma coluna em larguras muito estreitas. `text-size-adjust: 100%` foi aplicado para impedir que o sistema amplie a tipografia inesperadamente.
+
+A reprodução CSS equivalente ao aparelho (`802×329`) ficou completa: logo, painel direito, recorde, instruções, botões Ligar o Motor/Garagem e indicador de qualidade aparecem dentro da área útil.
+
+## Regressão funcional após ajuste do menu
+
+A prévia interativa iniciou a corrida com contagem regressiva `2`. A consulta confirmou canvas `1280×1100`, menu oculto durante a corrida, `QUALIDADE ALTO` e os controles `t-left`, `t-right`, `t-brake` e `t-nitro` presentes.
+
+## Garagem após correção da tela principal
+
+Após recarregar a prévia, o menu abriu sem corte; `Garagem` exibiu Upgrades normalmente e `Carros` mostrou o `3D SHOWROOM`, o Chama renderizado e os cinco veículos com cards, preços e estados de compra. A alteração ficou restrita ao layout responsivo e não quebrou a navegação.
+
+## Corrida após retorno da garagem
+
+O retorno pela seta `Voltar` levou ao menu principal sem corte. `Ligar o Motor` iniciou a contagem regressiva `2`; o cenário 3D, carro, HUD, controles laterais, freio e nitro permaneceram visíveis e funcionais.
+
+## Game over após correção da tela principal
+
+Foi simulado um fim de corrida com score, ganhos, conquistas, distância, moedas, combo, raspadas, recorde e trecho. O painel mostrou todos os dados, sem corte, e manteve `Jogar de novo` e `Início` acessíveis.
