@@ -73,3 +73,7 @@ A medição interativa de 1,5 s na prévia foi influenciada pelo ambiente de nav
 ## Garagem e showroom após correção mobile
 
 Após uma corrida encerrada, `Início` voltou ao menu preservando recorde e moedas. `Garagem` abriu normalmente; a aba `Carros` mostrou o `3D SHOWROOM`, preview renderizado do Chama, cinco cards (Chama, Brisa, Coruja, Rino e Fantasma), preços e estados de compra. O painel ficou dentro da tela e a área interna permaneceu rolável, sem corte.
+
+## Deploy público pós-commit
+
+O push `d45304e` foi publicado no GitHub. Em `https://car-pend.vercel.app/version.json`, a release `2.1.0`, `drifin-slot-v2`, `changeSize: pequena` e as release notes estão acessíveis. A página pública principal carregou como `Drifin Slot · Neon Drift`, mostrou a logo/identidade atual, o menu funcional, `QUALIDADE ALTO`, o aviso de atualização leve e os botões `Atualizar` e `Depois`.
