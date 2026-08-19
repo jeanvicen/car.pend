@@ -175,3 +175,7 @@ A captura ultrawide `1604x720` também passou: o logo e o painel ficam centraliz
 ## Regressão funcional completa
 
 Na sessão limpa, o menu abriu com Recorde 1366 e moedas 481 preservados. A garagem abriu com Upgrades, Conquistas, Estatísticas e Save; a aba `Carros` mostrou o showroom e os cinco veículos; `Voltar` retornou ao menu com os botões e o HUD intactos. A navegação do showroom foi concluída sem erro visível.
+
+## Deploy público da modernização 4.0.0
+
+O endpoint público confirmou a versão `4.0.0`, `cacheName: drifin-slot-v5` e as release notes da modernização. A página pública carregou menu, HUD, botão de câmera e aviso `Câmera interna e visual renovado`. A corrida pública iniciou com a contagem, e o clique no botão alterou o estado para `◉ Visão interna`; a captura mostrou horizonte/pista livres e o cockpit/painel na parte inferior.
