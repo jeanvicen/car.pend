@@ -1,0 +1,8 @@
+{
+  "name": "Drifin Slot",
+  "description": "Drifin Slot: corrida arcade neon em paisagem pela Rota 66 com física de direção e drift aprimoradas, modelagem rica de veículos e tráfego, efeitos de poeira e derrapagem dinâmicos e cenários otimizados.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

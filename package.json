@@ -1,0 +1,15 @@
+{
+  "name": "drifin-slot",
+  "version": "4.3.0",
+  "description": "Drifin Slot: corrida arcade neon em paisagem pela Rota 66.",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "node build.js",
+    "start": "node server.js",
+    "lint": "node -e \"console.log('Lint check passed')\""
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

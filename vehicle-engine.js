@@ -1,5 +1,6 @@
-/* Drifin Slot — Vehicle Engine 4.1.0
- * Data-driven arcade vehicle dynamics.
+/* Drifin Slot — Vehicle Engine 4.3.0
+ * Advanced data-driven arcade vehicle dynamics with responsive steering,
+ * progressive drift physics, suspension compliance & weight transfer.
  * No dependencies: safe for PWA cache and Capacitor Android.
  */
 (function (global) {
@@ -7,72 +8,78 @@
 
   const clamp = (v, min, max) => v < min ? min : v > max ? max : v;
   const smooth = (rate, dt) => 1 - Math.exp(-rate * Math.max(0, dt));
+  const lerp = (a, b, t) => a + (b - a) * t;
 
   // Tune here when adding or balancing a vehicle. Progression data remains in index.html.
   const PROFILES = {
     0: {
       key: 'balanced', tag: 'DRIFT BALANCEADO',
       speedMultiplier: 1, handling: 1, nitroEfficiency: 1,
-      acceleration: 13, deceleration: 30, nitroAcceleration: 26,
-      steeringForce: 42, steeringUpgrade: 6, lateralGain: .72,
-      dryGrip: .90, wetGrip: .72, brakeGrip: .66, airGrip: 1,
-      lateralDamping: 7.8, wetDamping: 1.2, airDamping: 2.4,
-      driftScale: 500, visualSteer: .34, visualDrift: .28,
-      rollScale: .07, brakeRoll: .06, pitchScale: .014, brakePitch: .06,
-      weightX: .018, weightZ: .008, suspensionTravel: .055, suspensionResponse: 9,
-      wheelBase: 2.82, steerResponse: 8.4, cornerGrip: 1.0,
+      acceleration: 13.5, deceleration: 32, nitroAcceleration: 27,
+      steeringForce: 45, steeringUpgrade: 6.5, lateralGain: .78,
+      dryGrip: .92, wetGrip: .74, brakeGrip: .68, airGrip: 1,
+      lateralDamping: 8.2, wetDamping: 1.15, airDamping: 2.2,
+      driftScale: 420, visualSteer: .40, visualDrift: .36,
+      rollScale: .085, brakeRoll: .07, pitchScale: .016, brakePitch: .068,
+      weightX: .022, weightZ: .010, suspensionTravel: .065, suspensionResponse: 11,
+      wheelBase: 2.82, steerResponse: 11.5, cornerGrip: 1.05,
+      driftFriction: 0.94, driftTrigger: 0.16,
       visual: { body: 'gt', wheelScale: 1.0, track: 1.0, roof: 1.0, aero: .72, ride: .02, stripe: .62 }
     },
     1: {
       key: 'agile', tag: 'DRIFT ÁGIL',
-      speedMultiplier: .94, handling: 1.25, nitroEfficiency: 1,
-      acceleration: 14.5, deceleration: 31, nitroAcceleration: 26,
-      steeringForce: 42, steeringUpgrade: 6.8, lateralGain: .79,
-      dryGrip: .94, wetGrip: .76, brakeGrip: .70, airGrip: 1,
-      lateralDamping: 8.5, wetDamping: 1.05, airDamping: 2.3,
-      driftScale: 470, visualSteer: .38, visualDrift: .25,
-      rollScale: .065, brakeRoll: .055, pitchScale: .013, brakePitch: .055,
-      weightX: .016, weightZ: .007, suspensionTravel: .048, suspensionResponse: 11,
-      wheelBase: 2.62, steerResponse: 10.2, cornerGrip: 1.08,
+      speedMultiplier: .95, handling: 1.28, nitroEfficiency: 1,
+      acceleration: 15.2, deceleration: 34, nitroAcceleration: 27.5,
+      steeringForce: 47, steeringUpgrade: 7.2, lateralGain: .84,
+      dryGrip: .96, wetGrip: .78, brakeGrip: .72, airGrip: 1,
+      lateralDamping: 8.9, wetDamping: 1.0, airDamping: 2.1,
+      driftScale: 390, visualSteer: .44, visualDrift: .32,
+      rollScale: .078, brakeRoll: .062, pitchScale: .014, brakePitch: .062,
+      weightX: .019, weightZ: .008, suspensionTravel: .058, suspensionResponse: 13,
+      wheelBase: 2.62, steerResponse: 13.8, cornerGrip: 1.14,
+      driftFriction: 0.96, driftTrigger: 0.14,
       visual: { body: 'hatch', wheelScale: .94, track: .97, roof: 1.08, aero: .42, ride: .04, stripe: .56 }
     },
     2: {
       key: 'speed', tag: 'DRIFT VELOCIDADE',
-      speedMultiplier: 1.12, handling: .88, nitroEfficiency: 1.15,
-      acceleration: 12.3, deceleration: 29, nitroAcceleration: 25,
-      steeringForce: 41, steeringUpgrade: 5.4, lateralGain: .66,
-      dryGrip: .86, wetGrip: .66, brakeGrip: .61, airGrip: 1,
-      lateralDamping: 7.2, wetDamping: 1.35, airDamping: 2.5,
-      driftScale: 525, visualSteer: .31, visualDrift: .31,
-      rollScale: .075, brakeRoll: .065, pitchScale: .015, brakePitch: .062,
-      weightX: .020, weightZ: .009, suspensionTravel: .062, suspensionResponse: 8,
-      wheelBase: 2.94, steerResponse: 7.5, cornerGrip: .94,
+      speedMultiplier: 1.14, handling: .92, nitroEfficiency: 1.18,
+      acceleration: 12.8, deceleration: 30, nitroAcceleration: 26.5,
+      steeringForce: 43, steeringUpgrade: 5.8, lateralGain: .70,
+      dryGrip: .88, wetGrip: .68, brakeGrip: .63, airGrip: 1,
+      lateralDamping: 7.5, wetDamping: 1.3, airDamping: 2.4,
+      driftScale: 460, visualSteer: .36, visualDrift: .38,
+      rollScale: .092, brakeRoll: .075, pitchScale: .018, brakePitch: .072,
+      weightX: .024, weightZ: .011, suspensionTravel: .070, suspensionResponse: 9.5,
+      wheelBase: 2.94, steerResponse: 9.8, cornerGrip: .98,
+      driftFriction: 0.92, driftTrigger: 0.18,
       visual: { body: 'coupe', wheelScale: 1.03, track: 1.04, roof: .88, aero: .9, ride: .015, stripe: .58 }
     },
     3: {
       key: 'heavy', tag: 'DRIFT BLINDADO',
-      speedMultiplier: .92, handling: .95, nitroEfficiency: .95,
-      acceleration: 11.8, deceleration: 34, nitroAcceleration: 27,
-      steeringForce: 44, steeringUpgrade: 5.8, lateralGain: .68,
-      dryGrip: .98, wetGrip: .82, brakeGrip: .78, airGrip: 1,
-      lateralDamping: 9.3, wetDamping: .9, airDamping: 2.8,
-      driftScale: 560, visualSteer: .30, visualDrift: .26,
-      rollScale: .055, brakeRoll: .045, pitchScale: .012, brakePitch: .05,
-      weightX: .014, weightZ: .006, suspensionTravel: .045, suspensionResponse: 13,
-      wheelBase: 3.12, steerResponse: 6.7, cornerGrip: 1.14,
+      speedMultiplier: .93, handling: .98, nitroEfficiency: .98,
+      acceleration: 12.4, deceleration: 36, nitroAcceleration: 28,
+      steeringForce: 46, steeringUpgrade: 6.2, lateralGain: .72,
+      dryGrip: .99, wetGrip: .84, brakeGrip: .80, airGrip: 1,
+      lateralDamping: 9.8, wetDamping: .85, airDamping: 2.6,
+      driftScale: 490, visualSteer: .34, visualDrift: .30,
+      rollScale: .068, brakeRoll: .052, pitchScale: .014, brakePitch: .056,
+      weightX: .017, weightZ: .007, suspensionTravel: .052, suspensionResponse: 14,
+      wheelBase: 3.12, steerResponse: 8.8, cornerGrip: 1.20,
+      driftFriction: 0.97, driftTrigger: 0.20,
       visual: { body: 'armor', wheelScale: 1.08, track: 1.09, roof: 1.14, aero: 1.02, ride: -.015, stripe: .72 }
     },
     4: {
       key: 'phantom', tag: 'DRIFT COMPLETO',
-      speedMultiplier: 1.10, handling: 1.15, nitroEfficiency: 1.20,
-      acceleration: 14, deceleration: 32, nitroAcceleration: 28,
-      steeringForce: 44, steeringUpgrade: 6.6, lateralGain: .76,
-      dryGrip: .96, wetGrip: .78, brakeGrip: .72, airGrip: 1,
-      lateralDamping: 8.4, wetDamping: 1.0, airDamping: 2.3,
-      driftScale: 490, visualSteer: .36, visualDrift: .27,
-      rollScale: .06, brakeRoll: .052, pitchScale: .013, brakePitch: .055,
-      weightX: .017, weightZ: .007, suspensionTravel: .052, suspensionResponse: 10,
-      wheelBase: 2.98, steerResponse: 8.8, cornerGrip: 1.06,
+      speedMultiplier: 1.12, handling: 1.18, nitroEfficiency: 1.22,
+      acceleration: 14.8, deceleration: 33, nitroAcceleration: 29,
+      steeringForce: 47, steeringUpgrade: 7.0, lateralGain: .80,
+      dryGrip: .97, wetGrip: .80, brakeGrip: .74, airGrip: 1,
+      lateralDamping: 8.8, wetDamping: .95, airDamping: 2.2,
+      driftScale: 410, visualSteer: .42, visualDrift: .34,
+      rollScale: .074, brakeRoll: .058, pitchScale: .015, brakePitch: .062,
+      weightX: .020, weightZ: .008, suspensionTravel: .060, suspensionResponse: 12,
+      wheelBase: 2.98, steerResponse: 12.0, cornerGrip: 1.10,
+      driftFriction: 0.95, driftTrigger: 0.15,
       visual: { body: 'phantom', wheelScale: 1.01, track: 1.06, roof: .96, aero: 1.22, ride: 0, stripe: .64 }
     }
   };
@@ -88,6 +95,9 @@
       this.suspension = 0;
       this.yawRate = 0;
       this.slipAngle = 0;
+      this.driftIntensity = 0;
+      this.bodyRoll = 0;
+      this.bodyPitch = 0;
     }
 
     profileFor(id) {
@@ -102,6 +112,9 @@
       this.suspension = 0;
       this.yawRate = 0;
       this.slipAngle = 0;
+      this.driftIntensity = 0;
+      this.bodyRoll = 0;
+      this.bodyPitch = 0;
       return this.profile;
     }
 
@@ -132,25 +145,55 @@
       const nextSpeed = Math.max(0, currentSpeed + clamp(target - currentSpeed, -acceleration * dt, acceleration * dt * (input.mode === 'count' ? 3 : 1)));
       const nextNitro = nitroOn ? Math.max(0, nitroAvailable - 28 / Math.max(.1, p.nitroEfficiency) * dt) : nitroAvailable;
 
-      let steerInput = clamp(input.steerInput || 0, -1, 1);
-      this.steerState += (steerInput - this.steerState) * smooth(p.steerResponse || 8, dt);
-      const steeringTarget = clamp(this.steerState * .46, -.46, .46);
-      const roadGrip = airborne ? p.airGrip : wet ? p.wetGrip : brake ? p.brakeGrip : p.dryGrip;
-      const steeringForce = (p.steeringForce + upgrade * p.steeringUpgrade) * p.handling;
-      const steeringSpeed = clamp(.38 + nextSpeed / 32, .38, 1.12);
-      const cornerDemand = clamp(Math.abs(this.steerState) * steeringSpeed * (nextSpeed / Math.max(1, p.wheelBase)) * .18, 0, 1.35);
-      const yawTarget = airborne ? 0 : this.steerState * steeringSpeed * roadGrip * (.62 + cornerDemand * .34) / Math.max(1, p.wheelBase);
-      this.yawRate += (yawTarget - this.yawRate) * smooth(7.5, dt);
-      let lateralVelocity = input.lateralVelocity || 0;
-      const lateralForce = (airborne ? steeringForce * .20 : steeringForce * p.lateralGain) * (1 - Math.min(.22, cornerDemand * .12));
-      lateralVelocity += this.steerState * lateralForce * steeringSpeed * roadGrip * dt;
-      lateralVelocity *= Math.exp((airborne ? -p.airDamping : -p.lateralDamping * roadGrip) * dt);
-      if (wet && Math.abs(lateralVelocity) > 1) lateralVelocity *= Math.exp(-p.wetDamping * dt);
-      const rawSlipAngle = Math.atan2(lateralVelocity, Math.max(nextSpeed, 4)) - this.yawRate * .18;
-      this.slipAngle += (rawSlipAngle - this.slipAngle) * smooth(6, dt);
-      const cornerLoad = clamp(Math.abs(this.yawRate) * .72 + Math.abs(this.slipAngle) * 1.8 + Math.abs(this.steerState) * .12, 0, 1);
+      // Progressive steering input with smooth response and center spring feel
+      let rawSteer = clamp(input.steerInput || 0, -1, 1);
+      // S-curve response for finer control around center and assertive bite at extremes
+      const steerShaped = Math.sign(rawSteer) * Math.pow(Math.abs(rawSteer), 1.25);
+      const steerResponse = (p.steerResponse || 10) * (airborne ? 0.45 : 1.0);
+      this.steerState += (steerShaped - this.steerState) * smooth(steerResponse, dt);
 
-      const drift = Math.abs(lateralVelocity) * nextSpeed * (1 + Math.abs(this.slipAngle) * .8) / p.driftScale;
+      // Road grip calculation with dynamic surface interaction
+      const baseGrip = airborne ? p.airGrip : wet ? p.wetGrip : brake ? p.brakeGrip : p.dryGrip;
+      const roadGrip = baseGrip * (p.cornerGrip || 1.0);
+
+      // Speed-dependent steering agility: high responsiveness at drift initiation speeds
+      const speedFactor = clamp(nextSpeed / 28, 0.4, 1.25);
+      const steeringForce = (p.steeringForce + upgrade * p.steeringUpgrade) * p.handling;
+
+      // Dynamic cornering load and yaw inertia
+      const cornerDemand = clamp(Math.abs(this.steerState) * speedFactor * (nextSpeed / Math.max(1, p.wheelBase)) * .20, 0, 1.4);
+      const targetYawRate = airborne ? 0 : this.steerState * speedFactor * roadGrip * (0.75 + cornerDemand * 0.35) / Math.max(1, p.wheelBase);
+      this.yawRate += (targetYawRate - this.yawRate) * smooth(9.5, dt);
+
+      // Lateral velocity integration with realistic tire adhesion limits
+      let lateralVelocity = input.lateralVelocity || 0;
+      const lateralGripMult = airborne ? 0.22 : p.lateralGain;
+      const gripLoss = brake ? 0.32 : Math.min(0.28, cornerDemand * 0.18);
+      const lateralForce = steeringForce * lateralGripMult * (1 - gripLoss);
+
+      lateralVelocity += this.steerState * lateralForce * speedFactor * roadGrip * dt;
+
+      // Lateral damping (tire friction counteracting slide)
+      const currentDamping = airborne ? p.airDamping : p.lateralDamping * roadGrip;
+      lateralVelocity *= Math.exp(-currentDamping * dt);
+      if (wet && Math.abs(lateralVelocity) > 0.8) lateralVelocity *= Math.exp(-p.wetDamping * dt);
+
+      // True slip angle: angle between vehicle heading and vehicle velocity vector
+      const forwardVelocity = Math.max(nextSpeed, 3);
+      const rawSlipAngle = Math.atan2(lateralVelocity, forwardVelocity) - this.yawRate * 0.22;
+      this.slipAngle += (rawSlipAngle - this.slipAngle) * smooth(7.5, dt);
+
+      // Drift calculation: triggers smoothly when lateral slide and slip angle exceed grip threshold
+      const rawDrift = (Math.abs(lateralVelocity) * nextSpeed * (1 + Math.abs(this.slipAngle) * 1.2)) / (p.driftScale || 450);
+      const driftThreshold = p.driftTrigger || 0.16;
+      const targetDriftIntensity = rawDrift > driftThreshold ? clamp((rawDrift - driftThreshold) * 1.8, 0, 1.5) : 0;
+      this.driftIntensity += (targetDriftIntensity - this.driftIntensity) * smooth(6.0, dt);
+
+      const cornerLoad = clamp(Math.abs(this.yawRate) * .75 + Math.abs(this.slipAngle) * 2.0 + Math.abs(this.steerState) * .15, 0, 1);
+
+      // Steering target for visual wheel turn
+      const steeringTarget = clamp(this.steerState * .48, -.48, .48);
+
       return {
         base,
         target,
@@ -164,15 +207,17 @@
         slipAngle: this.slipAngle,
         yawRate: this.yawRate,
         cornerLoad,
+        drift: rawDrift,
+        driftIntensity: this.driftIntensity,
         x: clamp((input.x || 0) + lateralVelocity * dt, -5.55, 5.55),
         roadGrip,
-        drift,
         profile: p
       };
     }
 
     visuals(input) {
       const p = this.profile || DEFAULT_PROFILE;
+      const dt = Math.max(0, input.dt || 0);
       const lateralVelocity = input.lateralVelocity || 0;
       const speed = input.speed || 0;
       const target = input.targetSpeed || 0;
@@ -182,17 +227,48 @@
       const slipAngle = input.slipAngle || Math.atan2(lateralVelocity, Math.max(speed, 4));
       const yawRate = input.yawRate || 0;
       const cornerLoad = clamp(input.cornerLoad || 0, 0, 1);
-      const rollTarget = clamp(-lateralVelocity * p.rollScale - yawRate * .09 + (brake ? steer * p.brakeRoll : 0), -.45, .45);
-      const pitchTarget = clamp((target - speed) * p.pitchScale, -.09, .12) + (brake ? p.brakePitch : 0) + (input.airPitch || 0);
-      const steerYaw = clamp(steer * p.visualSteer, -.24, .24);
-      const driftYaw = clamp(slipAngle * p.visualDrift, -.18, .18);
-      const yawTarget = clamp(steerYaw + driftYaw + yawRate * .08, -.32, .32);
-      const weightX = clamp(-lateralVelocity * p.weightX - yawRate * .018, -.11, .11);
-      const weightZ = clamp((target - speed) * p.weightZ + cornerLoad * .012, -.06, .06);
-      const load = clamp(Math.abs(lateralVelocity) * .035 + Math.abs(target - speed) * .05 + cornerLoad * .32 + (brake ? .28 : 0) + (airborne ? .65 : 0), 0, 1);
-      this.suspension += (load - this.suspension) * smooth(p.suspensionResponse, input.dt || 0);
-      const wheelLift = (this.suspension - .35) * p.suspensionTravel;
-      return { rollTarget, pitchTarget, yawTarget, weightX, weightZ, wheelLift, suspension: this.suspension, profile: p };
+
+      // Body roll: Chassis leans toward outside of turn (centrifugal tilt)
+      const rollTarget = clamp(
+        -lateralVelocity * p.rollScale - yawRate * .11 + (brake ? steer * p.brakeRoll : 0),
+        -.52, .52
+      );
+
+      // Body pitch: Nose dives under braking, squats under acceleration / nitro
+      const accelDelta = target - speed;
+      const pitchTarget = clamp(accelDelta * p.pitchScale, -.11, .14) + (brake ? p.brakePitch : 0) + (input.airPitch || 0);
+
+      // Body yaw: Combines steering angle and drift slip angle for authentic drift posture
+      const steerYaw = clamp(steer * p.visualSteer, -.26, .26);
+      const driftYaw = clamp(slipAngle * p.visualDrift, -.22, .22);
+      const yawTarget = clamp(steerYaw + driftYaw + yawRate * .10, -.36, .36);
+
+      // Weight transfer on chassis
+      const weightX = clamp(-lateralVelocity * p.weightX - yawRate * .022, -.13, .13);
+      const weightZ = clamp(accelDelta * p.weightZ + cornerLoad * .014, -.07, .07);
+
+      // Suspension deflection & wheel travel
+      const load = clamp(
+        Math.abs(lateralVelocity) * .04 + Math.abs(accelDelta) * .055 + cornerLoad * .36 + (brake ? .32 : 0) + (airborne ? .70 : 0),
+        0, 1
+      );
+      this.suspension += (load - this.suspension) * smooth(p.suspensionResponse || 11, dt);
+      const wheelLift = (this.suspension - .32) * p.suspensionTravel;
+
+      // Dynamic counter-steer angle for front wheels when sliding/drifting
+      const counterSteer = clamp(-slipAngle * 0.75 + steer * 0.35, -0.52, 0.52);
+
+      return {
+        rollTarget,
+        pitchTarget,
+        yawTarget,
+        weightX,
+        weightZ,
+        wheelLift,
+        counterSteer,
+        suspension: this.suspension,
+        profile: p
+      };
     }
   }
 
